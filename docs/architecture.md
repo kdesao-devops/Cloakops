@@ -36,10 +36,17 @@ src/cloakops/
 ├── policy.py         enabled entity types, risk level (YAML)
 ├── propagate.py      session propagation + seed dictionary (ADR 0007)
 ├── detect/
-│   ├── base.py       Detector protocol (NER/LLM layers plug in here)
-│   ├── rules/        aws, network, secrets, crypto_keys, k8s, identity
-│   ├── keyvalue.py   sensitive-key heuristics across YAML/JSON/HCL/env
-│   └── entropy.py    high-entropy unknown secrets
+│   ├── base.py       Detector protocol, fail-closed runner (NER/LLM layers plug in here)
+│   └── rules/        deterministic layer (ADR 0008)
+│       ├── base.py         Rule, RegexRule, RulesDetector
+│       ├── aws.py          ARNs, account IDs, access keys, buckets, resource endpoints
+│       ├── network.py      IPv4/IPv6, CIDRs, internal hostnames, organization domains
+│       ├── secrets.py      vendor tokens, JWTs, bearer tokens, URL passwords
+│       ├── crypto_keys.py  PEM/OpenSSH/PGP private keys (complete or truncated)
+│       ├── identity.py     emails
+│       ├── k8s.py          values of Kubernetes Secret data/stringData
+│       ├── keyvalue.py     sensitive field names across YAML/JSON/HCL/env/CLI flags
+│       └── entropy.py      high-entropy unknown secrets
 ├── pseudo/
 │   ├── session.py    mapping table
 │   ├── keyed.py      HMAC derivation
@@ -58,4 +65,5 @@ bench/
 
 See [docs/adr](adr/). Key ones: layered detection (0002), keyed structure-preserving
 pseudonymization (0003), recall-first benchmark (0004), text-level detection (0005), overlap
-resolution (0006), sensitive-values dictionary (0007).
+resolution (0006), sensitive-values dictionary (0007), rules
+layer conventions (0008).
