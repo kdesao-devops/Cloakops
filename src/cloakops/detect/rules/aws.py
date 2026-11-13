@@ -67,10 +67,10 @@ AWS_ACCESS_KEY_ID = RegexRule(
 AWS_UNIQUE_ID = RegexRule(
     name="aws-unique-id",
     entity_type=EntityType.RESOURCE_NAME,
-    # IAM unique IDs of users, roles, groups, instance profiles, policies... not secrets but
-    # stable identifiers of the account's principals.
+    # IAM unique IDs of users, roles, groups, instance profiles, policies (4 + 17 chars,
+    # e.g. AIDACKCEVSQ6C2EXAMPLE): not secrets but stable identifiers of the principals.
     pattern=re.compile(
-        r"(?<![A-Za-z0-9])(?:AIDA|AROA|AIPA|ANPA|ANVA|APKA|AGPA|ASCA)[A-Z0-9]{16}(?![A-Za-z0-9])"
+        r"(?<![A-Za-z0-9])(?:AIDA|AROA|AIPA|ANPA|ANVA|APKA|AGPA|ASCA)[A-Z0-9]{17}(?![A-Za-z0-9])"
     ),
 )
 
@@ -125,6 +125,16 @@ S3_PATH_STYLE_BUCKET = RegexRule(
     group=1,
 )
 
+EKS_CLI_CLUSTER = RegexRule(
+    name="eks-cli-cluster",
+    entity_type=EntityType.CLUSTER_NAME,
+    # aws eks update-kubeconfig --name X, eksctl ... --cluster X, --cluster-name X
+    pattern=re.compile(
+        r"\b(?:aws\s+eks|eksctl)\b[^\n]*?--(?:name|cluster|cluster-name)[ =]([A-Za-z0-9][\w-]*)"
+    ),
+    group=1,
+)
+
 AWS_RESOURCE_HOSTNAME = RegexRule(
     name="aws-resource-hostname",
     entity_type=EntityType.HOSTNAME,
@@ -152,5 +162,6 @@ def aws_rules() -> list[Rule]:
         S3_URI_BUCKET,
         S3_VIRTUAL_HOST_BUCKET,
         S3_PATH_STYLE_BUCKET,
+        EKS_CLI_CLUSTER,
         AWS_RESOURCE_HOSTNAME,
     ]

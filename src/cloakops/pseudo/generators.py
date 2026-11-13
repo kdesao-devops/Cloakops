@@ -118,7 +118,7 @@ def email(value: str, ctx: Context, counter: int) -> str:
 # --- AWS -------------------------------------------------------------------------------------
 
 _BASE32 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
-_IAM_UNIQUE_ID = re.compile(r"(?:AIDA|AROA|AIPA|ANPA|ANVA|APKA|AGPA|ASCA)[A-Z0-9]{16}")
+_IAM_UNIQUE_ID = re.compile(r"(?:AIDA|AROA|AIPA|ANPA|ANVA|APKA|AGPA|ASCA)[A-Z0-9]{17}")
 
 
 def account_id(value: str, ctx: Context, counter: int) -> str:
@@ -190,7 +190,7 @@ def arn(value: str, ctx: Context, counter: int) -> str:
 
 def name(value: str, ctx: Context, counter: int) -> str:
     if _IAM_UNIQUE_ID.fullmatch(value):
-        return value[:4] + ctx.derivation.choice(UPPER + DIGITS, 16, "iam-id", value, counter)
+        return value[:4] + ctx.derivation.choice(UPPER + DIGITS, 17, "iam-id", value, counter)
     if counter:
         return class_preserving(value, ctx.derivation, "name", counter)
     return pseudo_words(value, ctx.derivation)

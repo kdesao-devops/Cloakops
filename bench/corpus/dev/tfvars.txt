@@ -1,0 +1,8 @@
+# prod.auto.tfvars
+account_id         = "⟦aws_account_id|481572903364⟧"
+vpc_cidr           = "⟦ip_network|10.30.0.0/16⟧"
+admin_cidrs        = ["⟦ip_network|82.64.143.0/24⟧"]
+cluster_name       = "⟦cluster_name|korvane-prod⟧"
+alert_email        = "⟦email|oncall@korvane.com⟧"
+datadog_api_key    = "⟦generic_secret|8c1f4e2a9b7d3f6e0a5c8b2d4f1e7a9c⟧"
+customer_tag       = "⟦organization|Brindel Logistics⟧"

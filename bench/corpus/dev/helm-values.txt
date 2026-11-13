@@ -1,0 +1,18 @@
+# values-prod.yaml for chart payments-api 3.2.1
+image:
+  repository: ⟦aws_account_id|481572903364⟧.dkr.ecr.eu-west-3.amazonaws.com/payments-api
+  tag: "3.2.1"
+ingress:
+  enabled: true
+  hosts:
+    - host: ⟦hostname|pay.korvane.com⟧
+      paths: ["/"]
+postgresql:
+  auth:
+    username: payments
+    password: "⟦password|kQ9#vLm2xZ⟧"
+    database: payments
+externalSecrets:
+  awsRoleArn: arn:aws:iam::⟦aws_account_id|481572903364⟧:role/⟦resource_name|korvane-payments-eso⟧
+sentry:
+  dsn: https://⟦api_token|5f0c2a9e41b84d7fa3c6e1d29b7f8a10⟧@o⟦resource_name|4507211⟧.ingest.sentry.io/⟦resource_name|4507339⟧

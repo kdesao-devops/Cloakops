@@ -105,3 +105,10 @@ def test_emails_but_not_git_remotes() -> None:
 def test_vendor_token_wins_over_generic_detections() -> None:
     token = fake("ghp_", ALNUM, 36)
     assert resolved(f"GITHUB_TOKEN={token}") == [(E.API_TOKEN, token)]
+
+
+def test_ssh_config_user() -> None:
+    from cloakops.detect.rules.identity import SSH_CONFIG_USER
+
+    text = "Host bastion\n    User lmercier\nHost *\n    User ec2-user\n"
+    assert values(text, SSH_CONFIG_USER) == ["lmercier"]

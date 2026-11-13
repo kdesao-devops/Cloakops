@@ -1,0 +1,5 @@
+[09:12] ⟦person|Léa Mercier⟧: prod checkout is throwing 502s since the deploy
+[09:13] ⟦person|Marc Vasseur⟧: looking. ALB target group shows ⟦ip_address|10.30.21.200⟧ unhealthy
+[09:15] ⟦person|Marc Vasseur⟧: rolled back ⟦cluster_name|korvane-prod⟧ to the previous release
+[09:16] ⟦person|Léa Mercier⟧: thanks, I'll tell ⟦organization|Brindel Logistics⟧, they were hit hardest
+[09:20] ⟦person|Marc Vasseur⟧: root cause: the new ⟦aws_resource_id|sg-0a9d3c7e5b1f24680⟧ rule only allowed ⟦ip_network|10.30.0.0/20⟧

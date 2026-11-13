@@ -1,0 +1,13 @@
+services:
+  api:
+    image: ghcr.io/⟦organization|korvane⟧/api:2.4.0
+    environment:
+      DATABASE_URL: postgres://api:⟦password|Hx7!dP2qRz⟧@db:5432/api
+      STRIPE_SECRET_KEY: ⟦api_token|sk_live_51QzXk8LmN3pR7vT2wY4bC6dF⟧
+      NOTIFY_WEBHOOK: ⟦api_token|https://hooks.slack.com/services/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⟧
+    extra_hosts:
+      - "⟦hostname|legacy-erp.korvane.lan⟧:⟦ip_address|10.20.9.40⟧"
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: ⟦password|Hx7!dP2qRz⟧

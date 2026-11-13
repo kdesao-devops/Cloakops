@@ -59,11 +59,18 @@ src/cloakops/
 └── reinject.py       pseudonym → real value: longest first, exact, bounded (ADR 0011)
 
 bench/
-├── generate.py       seeded synthetic corpus with recorded spans
-├── run.py            per-entity recall / precision, per-document leak rate
-├── corpus/synthetic/ generated, used for development
+├── run.py            runs all corpora, writes reports, enforces the recall ratchet (ADR 0013)
+├── thresholds.json   per-type recall floor (only goes up)
+├── corpus/dev/       hand-written, already used to improve the rules
 ├── corpus/holdout/   hand-written, never used for tuning
-└── reports/          versioned results
+└── reports/          latest.json / latest.md (no values)
+
+src/cloakops/benchmark/
+├── fakes.py          seeded realistic fake values
+├── templates.py      synthetic document templates ({{factory}} placeholders)
+├── corpus.py         rendering with recorded spans, ⟦type|value⟧ holdout parser
+├── metrics.py        recall / precision / F2 / leak rate, design-aware coverage
+└── report.py         JSON and Markdown rendering
 ```
 
 ## Decisions
@@ -72,4 +79,5 @@ See [docs/adr](adr/). Key ones: layered detection (0002), keyed structure-preser
 pseudonymization (0003), recall-first benchmark (0004), text-level detection (0005), overlap
 resolution (0006), sensitive-values dictionary (0007), rules
 layer conventions (0008), masking of non-secret identifiers (0009),
-coherent and syntax-safe pseudonyms (0010), re-injection (0011), propagation and output re-scan (0012).
+coherent and syntax-safe pseudonyms (0010), re-injection (0011), propagation and output re-scan (0012),
+benchmark implementation (0013).

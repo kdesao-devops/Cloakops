@@ -1,0 +1,12 @@
+# inventories/prod/hosts.ini -- managed by the platform team
+[web]
+⟦hostname|web-01.prod.korvane.lan⟧ ansible_host=⟦ip_address|10.20.4.11⟧
+⟦hostname|web-02.prod.korvane.lan⟧ ansible_host=⟦ip_address|10.20.4.12⟧
+
+[db]
+⟦hostname|pg-primary.prod.korvane.lan⟧ ansible_host=⟦ip_address|10.20.8.5⟧ ansible_user=⟦person|mvasseur⟧
+
+[all:vars]
+ansible_ssh_private_key_file=⟦resource_name|~/.ssh/korvane_deploy⟧
+ansible_become_pass=⟦password|Tr4nsit!on-77⟧
+ntp_server=⟦ip_address|10.20.0.2⟧

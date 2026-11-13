@@ -3,7 +3,8 @@
 > Send your Terraform plans, Kubernetes manifests and logs to a public LLM without sending your
 > secrets and infrastructure identifiers with them.
 
-**Status: early development (phase 0, framing).** Nothing usable yet.
+**Status: early development (phase 1).** Library pipeline and benchmark in place; CLI next.
+See the [benchmark](docs/benchmark.md) for measured recall, including its limits.
 
 cloakops is a local pseudonymization gateway specialized for infrastructure and DevOps data.
 It detects secrets and sensitive identifiers (IPs/CIDRs, ARNs, AWS account IDs, internal
@@ -45,6 +46,7 @@ design, and under GDPR pseudonymized personal data is still personal data.
 - [Threat model](docs/threat-model.md)
 - [Architecture](docs/architecture.md)
 - [Architecture Decision Records](docs/adr/)
+- [Benchmark](docs/benchmark.md)
 
 ## Development
 

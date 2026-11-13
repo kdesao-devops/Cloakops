@@ -48,7 +48,7 @@ def test_account_id_needs_exactly_twelve_digits() -> None:
 def test_access_key_ids_and_unique_ids() -> None:
     akia = fake("AKIA", UPPER_DIGITS, 16)
     asia = fake("ASIA", UPPER_DIGITS, 16, seed=1)
-    aroa = fake("AROA", UPPER_DIGITS, 16, seed=2)
+    aroa = fake("AROA", UPPER_DIGITS, 17, seed=2)
     text = f"key={akia} temp {asia}\nrole id {aroa}\nnot {akia}X"
     assert raw(text, AWS_ACCESS_KEY_ID, AWS_UNIQUE_ID) == sorted(
         [(E.AWS_ACCESS_KEY_ID, akia), (E.AWS_ACCESS_KEY_ID, asia), (E.RESOURCE_NAME, aroa)]

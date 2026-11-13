@@ -36,11 +36,14 @@ select = ["E", "F", "W", "I", "B", "UP", "S", "SIM", "RUF"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S101"]  # assert is the point of tests
+# Benchmark templates and fakes are data: long realistic lines are the point.
+"src/cloakops/benchmark/templates.py" = ["E501"]
+"src/cloakops/benchmark/fakes.py" = ["E501"]
 
 [tool.mypy]
 strict = true
 python_version = "3.12"
-files = ["src", "tests"]
+files = ["src", "tests", "bench"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -23,6 +23,7 @@ from collections.abc import Iterator
 
 from cloakops.detect.rules.base import Rule, span_for
 from cloakops.model import EntityType, Span
+from cloakops.pseudo.text import is_generic
 
 # --- Key classification --------------------------------------------------------------------
 
@@ -84,6 +85,10 @@ _METADATA_SUFFIXES = (
 _REFERENCE_SUFFIXES = ("name", "ref", "arn", "id", "path", "file", "location")
 
 
+_PERSON_SUFFIXES = ("username", "user", "login")
+_NOT_PERSON = frozenset({"runasuser", "runasnonroot", "nonrootuser", "enableuser"})
+
+
 def normalize_key(key: str) -> str:
     """client_secret, clientSecret, CLIENT-SECRET -> clientsecret."""
     return re.sub(r"[^a-z0-9]", "", key.lower())
@@ -119,6 +124,10 @@ def classify_key(key: str) -> tuple[EntityType, float] | None:
     elif norm in _SECRET_EXACT or any(word in norm for word in _SECRET_WORDS):
         entity_type = EntityType.GENERIC_SECRET
     if entity_type is None:
+        if norm.endswith(_PERSON_SUFFIXES) and norm not in _NOT_PERSON:
+            return EntityType.PERSON, 0.8  # ansible_user, db_username, remote_login
+        if "customer" in norm:
+            return EntityType.ORGANIZATION, 0.8  # customer_tag, end_customer
         return None
 
     if norm.endswith(_METADATA_SUFFIXES):
@@ -132,7 +141,8 @@ def classify_key(key: str) -> tuple[EntityType, float] | None:
 
 _PLACEHOLDERS = frozenset(
     {
-        "", "null", "none", "nil", "~", "true", "false", "yes", "no", "on", "off", "redacted",
+        "", "null", "none", "nil", "~", "true", "false", "yes", "no", "on", "off", "read", "write",
+        "redacted",
         "<redacted>", "[redacted]", "<sensitive>", "(sensitive)", "(sensitive value)",
         "(known after apply)", "-", "|", ">", "{", "[", "{}", "[]",
     }
@@ -280,6 +290,9 @@ class KeyValueRule:
                 entity_type, confidence = classified
                 sep = match.group("sep").strip() or " "
                 for start, end in read_values(text, match.end(), sep, match.start()):
+                    value = text[start:end]
+                    if entity_type is EntityType.PERSON and (is_generic(value) or value.isdigit()):
+                        continue  # user: deployer, owner: platform, uid 1000: not a person
                     covered_until = max(covered_until, end)
                     yield span_for(self.name, start, end, entity_type, confidence)
 

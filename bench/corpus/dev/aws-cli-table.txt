@@ -1,0 +1,13 @@
+$ aws ec2 describe-instances --query 'Reservations[].Instances[].[InstanceId,PrivateIpAddress,Tags[?Key==`Name`]|[0].Value]' --output table
+-----------------------------------------------------------
+|                    DescribeInstances                    |
++----------------------+---------------+------------------+
+|  ⟦aws_resource_id|i-04b7c1e9a2f3d6810⟧ |  ⟦ip_address|10.30.1.14⟧   |  bastion         |
+|  ⟦aws_resource_id|i-0c5e8f2a7b1d94e36⟧ |  ⟦ip_address|10.30.21.200⟧ |  korvane-etl-01  |
++----------------------+---------------+------------------+
+$ aws sts get-caller-identity
+{
+    "UserId": "⟦resource_name|AROAXK4ZQ7N2P5LM8RTQW⟧:⟦email|lea.mercier@korvane.com⟧",
+    "Account": "⟦aws_account_id|481572903364⟧",
+    "Arn": "arn:aws:sts::⟦aws_account_id|481572903364⟧:assumed-role/⟦resource_name|KorvaneAdmin⟧/⟦email|lea.mercier@korvane.com⟧"
+}

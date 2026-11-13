@@ -122,3 +122,15 @@ def test_uuid_masked_in_context_only() -> None:
     uuid = "3f2b8c1e-9a4d-4e7b-b1c2-5d6e7f8a9b0c"
     text = f'tenant_id = "{uuid}"\nrequest_id = "{uuid}"\n'
     assert raw(text, KV) == [(E.RESOURCE_NAME, uuid)]
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("web-01 ansible_host=10.0.0.1 ansible_user=mvasseur\n", ["mvasseur"]),
+        ('customer_tag = "Brindel Logistics"\n', ["Brindel Logistics"]),
+        ("user: deployer\nrunAsUser: 1000\nusername: 1000\n", []),  # roles and uids
+    ],
+)
+def test_person_and_customer_keys_by_suffix(text: str, expected: list[str]) -> None:
+    assert values(text, KV) == expected

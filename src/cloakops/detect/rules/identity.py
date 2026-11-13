@@ -7,6 +7,7 @@ import re
 
 from cloakops.detect.rules.base import RegexRule, Rule
 from cloakops.model import EntityType
+from cloakops.pseudo.text import is_generic
 
 
 def _not_git_remote(email: str) -> bool:
@@ -24,5 +25,16 @@ EMAIL = RegexRule(
 )
 
 
+SSH_CONFIG_USER = RegexRule(
+    name="ssh-config-user",
+    entity_type=EntityType.PERSON,
+    # ssh_config / sshd: "    User lmercier" (keyword and value separated by spaces)
+    pattern=re.compile(r"^[ \t]*User[ \t]+([^\s#]+)", re.M),
+    group=1,
+    confidence=0.8,
+    validate=lambda v: not is_generic(v) and not v.isdigit(),
+)
+
+
 def identity_rules() -> list[Rule]:
-    return [EMAIL]
+    return [EMAIL, SSH_CONFIG_USER]

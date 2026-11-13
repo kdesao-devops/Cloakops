@@ -1,0 +1,1773 @@
+{
+  "synthetic": {
+    "documents": 200,
+    "leaked_documents": 40,
+    "blocked_documents": 0,
+    "merged_spans": 0,
+    "recall": 0.9355,
+    "precision": 1.0,
+    "f2": 0.9477,
+    "per_type": {
+      "api_token": {
+        "planted": 80,
+        "caught": 80,
+        "recall": 1.0,
+        "masked": 80,
+        "precision": 1.0
+      },
+      "arn": {
+        "planted": 0,
+        "caught": 0,
+        "recall": 1.0,
+        "masked": 60,
+        "precision": 1.0
+      },
+      "aws_access_key_id": {
+        "planted": 40,
+        "caught": 40,
+        "recall": 1.0,
+        "masked": 40,
+        "precision": 1.0
+      },
+      "aws_account_id": {
+        "planted": 120,
+        "caught": 120,
+        "recall": 1.0,
+        "masked": 40,
+        "precision": 1.0
+      },
+      "aws_resource_id": {
+        "planted": 120,
+        "caught": 120,
+        "recall": 1.0,
+        "masked": 100,
+        "precision": 1.0
+      },
+      "aws_secret_access_key": {
+        "planted": 20,
+        "caught": 20,
+        "recall": 1.0,
+        "masked": 20,
+        "precision": 1.0
+      },
+      "bucket_name": {
+        "planted": 60,
+        "caught": 60,
+        "recall": 1.0,
+        "masked": 81,
+        "precision": 1.0
+      },
+      "cluster_name": {
+        "planted": 60,
+        "caught": 60,
+        "recall": 1.0,
+        "masked": 60,
+        "precision": 1.0
+      },
+      "email": {
+        "planted": 80,
+        "caught": 80,
+        "recall": 1.0,
+        "masked": 60,
+        "precision": 1.0
+      },
+      "generic_secret": {
+        "planted": 40,
+        "caught": 40,
+        "recall": 1.0,
+        "masked": 80,
+        "precision": 1.0
+      },
+      "hostname": {
+        "planted": 140,
+        "caught": 140,
+        "recall": 1.0,
+        "masked": 140,
+        "precision": 1.0
+      },
+      "ip_address": {
+        "planted": 140,
+        "caught": 140,
+        "recall": 1.0,
+        "masked": 140,
+        "precision": 1.0
+      },
+      "ip_network": {
+        "planted": 20,
+        "caught": 20,
+        "recall": 1.0,
+        "masked": 20,
+        "precision": 1.0
+      },
+      "jwt": {
+        "planted": 40,
+        "caught": 40,
+        "recall": 1.0,
+        "masked": 20,
+        "precision": 1.0
+      },
+      "organization": {
+        "planted": 60,
+        "caught": 40,
+        "recall": 0.6667,
+        "masked": 40,
+        "precision": 1.0
+      },
+      "password": {
+        "planted": 80,
+        "caught": 80,
+        "recall": 1.0,
+        "masked": 60,
+        "precision": 1.0
+      },
+      "person": {
+        "planted": 40,
+        "caught": 0,
+        "recall": 0.0,
+        "masked": 0,
+        "precision": 1.0
+      },
+      "private_key": {
+        "planted": 20,
+        "caught": 20,
+        "recall": 1.0,
+        "masked": 20,
+        "precision": 1.0
+      },
+      "resource_name": {
+        "planted": 80,
+        "caught": 60,
+        "recall": 0.75,
+        "masked": 22,
+        "precision": 1.0
+      }
+    },
+    "caught_by_layer": {
+      "propagation": 80,
+      "rules": 1080
+    },
+    "misses": [
+      {
+        "document": "terraform-plan-000",
+        "type": "resource_name",
+        "start": 668,
+        "end": 691
+      },
+      {
+        "document": "terraform-plan-001",
+        "type": "resource_name",
+        "start": 669,
+        "end": 692
+      },
+      {
+        "document": "terraform-plan-002",
+        "type": "resource_name",
+        "start": 664,
+        "end": 684
+      },
+      {
+        "document": "terraform-plan-003",
+        "type": "resource_name",
+        "start": 669,
+        "end": 691
+      },
+      {
+        "document": "terraform-plan-004",
+        "type": "resource_name",
+        "start": 665,
+        "end": 686
+      },
+      {
+        "document": "terraform-plan-005",
+        "type": "resource_name",
+        "start": 662,
+        "end": 684
+      },
+      {
+        "document": "terraform-plan-006",
+        "type": "resource_name",
+        "start": 666,
+        "end": 688
+      },
+      {
+        "document": "terraform-plan-007",
+        "type": "resource_name",
+        "start": 665,
+        "end": 688
+      },
+      {
+        "document": "terraform-plan-008",
+        "type": "resource_name",
+        "start": 663,
+        "end": 684
+      },
+      {
+        "document": "terraform-plan-009",
+        "type": "resource_name",
+        "start": 665,
+        "end": 687
+      },
+      {
+        "document": "terraform-plan-010",
+        "type": "resource_name",
+        "start": 668,
+        "end": 690
+      },
+      {
+        "document": "terraform-plan-011",
+        "type": "resource_name",
+        "start": 667,
+        "end": 690
+      },
+      {
+        "document": "terraform-plan-012",
+        "type": "resource_name",
+        "start": 667,
+        "end": 690
+      },
+      {
+        "document": "terraform-plan-013",
+        "type": "resource_name",
+        "start": 664,
+        "end": 685
+      },
+      {
+        "document": "terraform-plan-014",
+        "type": "resource_name",
+        "start": 663,
+        "end": 684
+      },
+      {
+        "document": "terraform-plan-015",
+        "type": "resource_name",
+        "start": 664,
+        "end": 687
+      },
+      {
+        "document": "terraform-plan-016",
+        "type": "resource_name",
+        "start": 663,
+        "end": 685
+      },
+      {
+        "document": "terraform-plan-017",
+        "type": "resource_name",
+        "start": 660,
+        "end": 681
+      },
+      {
+        "document": "terraform-plan-018",
+        "type": "resource_name",
+        "start": 663,
+        "end": 686
+      },
+      {
+        "document": "terraform-plan-019",
+        "type": "resource_name",
+        "start": 661,
+        "end": 684
+      },
+      {
+        "document": "incident-note-000",
+        "type": "person",
+        "start": 54,
+        "end": 65
+      },
+      {
+        "document": "incident-note-000",
+        "type": "organization",
+        "start": 97,
+        "end": 107
+      },
+      {
+        "document": "incident-note-000",
+        "type": "person",
+        "start": 230,
+        "end": 245
+      },
+      {
+        "document": "incident-note-001",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-001",
+        "type": "organization",
+        "start": 98,
+        "end": 108
+      },
+      {
+        "document": "incident-note-001",
+        "type": "person",
+        "start": 231,
+        "end": 242
+      },
+      {
+        "document": "incident-note-002",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-002",
+        "type": "organization",
+        "start": 98,
+        "end": 110
+      },
+      {
+        "document": "incident-note-002",
+        "type": "person",
+        "start": 233,
+        "end": 244
+      },
+      {
+        "document": "incident-note-003",
+        "type": "person",
+        "start": 54,
+        "end": 65
+      },
+      {
+        "document": "incident-note-003",
+        "type": "organization",
+        "start": 97,
+        "end": 105
+      },
+      {
+        "document": "incident-note-003",
+        "type": "person",
+        "start": 228,
+        "end": 240
+      },
+      {
+        "document": "incident-note-004",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-004",
+        "type": "organization",
+        "start": 98,
+        "end": 106
+      },
+      {
+        "document": "incident-note-004",
+        "type": "person",
+        "start": 228,
+        "end": 240
+      },
+      {
+        "document": "incident-note-005",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-005",
+        "type": "organization",
+        "start": 98,
+        "end": 108
+      },
+      {
+        "document": "incident-note-005",
+        "type": "person",
+        "start": 230,
+        "end": 241
+      },
+      {
+        "document": "incident-note-006",
+        "type": "person",
+        "start": 54,
+        "end": 67
+      },
+      {
+        "document": "incident-note-006",
+        "type": "organization",
+        "start": 99,
+        "end": 109
+      },
+      {
+        "document": "incident-note-006",
+        "type": "person",
+        "start": 232,
+        "end": 243
+      },
+      {
+        "document": "incident-note-007",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-007",
+        "type": "organization",
+        "start": 98,
+        "end": 106
+      },
+      {
+        "document": "incident-note-007",
+        "type": "person",
+        "start": 229,
+        "end": 241
+      },
+      {
+        "document": "incident-note-008",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-008",
+        "type": "organization",
+        "start": 98,
+        "end": 108
+      },
+      {
+        "document": "incident-note-008",
+        "type": "person",
+        "start": 231,
+        "end": 243
+      },
+      {
+        "document": "incident-note-009",
+        "type": "person",
+        "start": 54,
+        "end": 65
+      },
+      {
+        "document": "incident-note-009",
+        "type": "organization",
+        "start": 97,
+        "end": 108
+      },
+      {
+        "document": "incident-note-009",
+        "type": "person",
+        "start": 230,
+        "end": 242
+      },
+      {
+        "document": "incident-note-010",
+        "type": "person",
+        "start": 54,
+        "end": 65
+      },
+      {
+        "document": "incident-note-010",
+        "type": "organization",
+        "start": 97,
+        "end": 107
+      },
+      {
+        "document": "incident-note-010",
+        "type": "person",
+        "start": 230,
+        "end": 240
+      },
+      {
+        "document": "incident-note-011",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-011",
+        "type": "organization",
+        "start": 98,
+        "end": 108
+      },
+      {
+        "document": "incident-note-011",
+        "type": "person",
+        "start": 230,
+        "end": 245
+      },
+      {
+        "document": "incident-note-012",
+        "type": "person",
+        "start": 54,
+        "end": 65
+      },
+      {
+        "document": "incident-note-012",
+        "type": "organization",
+        "start": 97,
+        "end": 107
+      },
+      {
+        "document": "incident-note-012",
+        "type": "person",
+        "start": 229,
+        "end": 241
+      },
+      {
+        "document": "incident-note-013",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-013",
+        "type": "organization",
+        "start": 98,
+        "end": 110
+      },
+      {
+        "document": "incident-note-013",
+        "type": "person",
+        "start": 233,
+        "end": 245
+      },
+      {
+        "document": "incident-note-014",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-014",
+        "type": "organization",
+        "start": 98,
+        "end": 109
+      },
+      {
+        "document": "incident-note-014",
+        "type": "person",
+        "start": 232,
+        "end": 244
+      },
+      {
+        "document": "incident-note-015",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-015",
+        "type": "organization",
+        "start": 98,
+        "end": 106
+      },
+      {
+        "document": "incident-note-015",
+        "type": "person",
+        "start": 228,
+        "end": 241
+      },
+      {
+        "document": "incident-note-016",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-016",
+        "type": "organization",
+        "start": 98,
+        "end": 108
+      },
+      {
+        "document": "incident-note-016",
+        "type": "person",
+        "start": 231,
+        "end": 242
+      },
+      {
+        "document": "incident-note-017",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-017",
+        "type": "organization",
+        "start": 98,
+        "end": 106
+      },
+      {
+        "document": "incident-note-017",
+        "type": "person",
+        "start": 228,
+        "end": 239
+      },
+      {
+        "document": "incident-note-018",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-018",
+        "type": "organization",
+        "start": 98,
+        "end": 106
+      },
+      {
+        "document": "incident-note-018",
+        "type": "person",
+        "start": 229,
+        "end": 241
+      },
+      {
+        "document": "incident-note-019",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-019",
+        "type": "organization",
+        "start": 98,
+        "end": 106
+      },
+      {
+        "document": "incident-note-019",
+        "type": "person",
+        "start": 229,
+        "end": 241
+      }
+    ],
+    "false_positives": []
+  },
+  "synthetic (no propagation)": {
+    "documents": 200,
+    "leaked_documents": 60,
+    "blocked_documents": 22,
+    "merged_spans": 0,
+    "recall": 0.9194,
+    "precision": 1.0,
+    "f2": 0.9344,
+    "per_type": {
+      "api_token": {
+        "planted": 80,
+        "caught": 80,
+        "recall": 1.0,
+        "masked": 80,
+        "precision": 1.0
+      },
+      "arn": {
+        "planted": 0,
+        "caught": 0,
+        "recall": 1.0,
+        "masked": 60,
+        "precision": 1.0
+      },
+      "aws_access_key_id": {
+        "planted": 40,
+        "caught": 40,
+        "recall": 1.0,
+        "masked": 40,
+        "precision": 1.0
+      },
+      "aws_account_id": {
+        "planted": 120,
+        "caught": 120,
+        "recall": 1.0,
+        "masked": 40,
+        "precision": 1.0
+      },
+      "aws_resource_id": {
+        "planted": 120,
+        "caught": 120,
+        "recall": 1.0,
+        "masked": 100,
+        "precision": 1.0
+      },
+      "aws_secret_access_key": {
+        "planted": 20,
+        "caught": 20,
+        "recall": 1.0,
+        "masked": 20,
+        "precision": 1.0
+      },
+      "bucket_name": {
+        "planted": 60,
+        "caught": 60,
+        "recall": 1.0,
+        "masked": 58,
+        "precision": 1.0
+      },
+      "cluster_name": {
+        "planted": 60,
+        "caught": 40,
+        "recall": 0.6667,
+        "masked": 20,
+        "precision": 1.0
+      },
+      "email": {
+        "planted": 80,
+        "caught": 80,
+        "recall": 1.0,
+        "masked": 60,
+        "precision": 1.0
+      },
+      "generic_secret": {
+        "planted": 40,
+        "caught": 40,
+        "recall": 1.0,
+        "masked": 80,
+        "precision": 1.0
+      },
+      "hostname": {
+        "planted": 140,
+        "caught": 140,
+        "recall": 1.0,
+        "masked": 118,
+        "precision": 1.0
+      },
+      "ip_address": {
+        "planted": 140,
+        "caught": 140,
+        "recall": 1.0,
+        "masked": 140,
+        "precision": 1.0
+      },
+      "ip_network": {
+        "planted": 20,
+        "caught": 20,
+        "recall": 1.0,
+        "masked": 20,
+        "precision": 1.0
+      },
+      "jwt": {
+        "planted": 40,
+        "caught": 40,
+        "recall": 1.0,
+        "masked": 0,
+        "precision": 1.0
+      },
+      "organization": {
+        "planted": 60,
+        "caught": 40,
+        "recall": 0.6667,
+        "masked": 40,
+        "precision": 1.0
+      },
+      "password": {
+        "planted": 80,
+        "caught": 80,
+        "recall": 1.0,
+        "masked": 56,
+        "precision": 1.0
+      },
+      "person": {
+        "planted": 40,
+        "caught": 0,
+        "recall": 0.0,
+        "masked": 0,
+        "precision": 1.0
+      },
+      "private_key": {
+        "planted": 20,
+        "caught": 20,
+        "recall": 1.0,
+        "masked": 20,
+        "precision": 1.0
+      },
+      "resource_name": {
+        "planted": 80,
+        "caught": 60,
+        "recall": 0.75,
+        "masked": 18,
+        "precision": 1.0
+      }
+    },
+    "caught_by_layer": {
+      "rules": 1140
+    },
+    "misses": [
+      {
+        "document": "terraform-plan-000",
+        "type": "resource_name",
+        "start": 668,
+        "end": 691
+      },
+      {
+        "document": "terraform-plan-001",
+        "type": "resource_name",
+        "start": 669,
+        "end": 692
+      },
+      {
+        "document": "terraform-plan-002",
+        "type": "resource_name",
+        "start": 664,
+        "end": 684
+      },
+      {
+        "document": "terraform-plan-003",
+        "type": "resource_name",
+        "start": 669,
+        "end": 691
+      },
+      {
+        "document": "terraform-plan-004",
+        "type": "resource_name",
+        "start": 665,
+        "end": 686
+      },
+      {
+        "document": "terraform-plan-005",
+        "type": "resource_name",
+        "start": 662,
+        "end": 684
+      },
+      {
+        "document": "terraform-plan-006",
+        "type": "resource_name",
+        "start": 666,
+        "end": 688
+      },
+      {
+        "document": "terraform-plan-007",
+        "type": "resource_name",
+        "start": 665,
+        "end": 688
+      },
+      {
+        "document": "terraform-plan-008",
+        "type": "resource_name",
+        "start": 663,
+        "end": 684
+      },
+      {
+        "document": "terraform-plan-009",
+        "type": "resource_name",
+        "start": 665,
+        "end": 687
+      },
+      {
+        "document": "terraform-plan-010",
+        "type": "resource_name",
+        "start": 668,
+        "end": 690
+      },
+      {
+        "document": "terraform-plan-011",
+        "type": "resource_name",
+        "start": 667,
+        "end": 690
+      },
+      {
+        "document": "terraform-plan-012",
+        "type": "resource_name",
+        "start": 667,
+        "end": 690
+      },
+      {
+        "document": "terraform-plan-013",
+        "type": "resource_name",
+        "start": 664,
+        "end": 685
+      },
+      {
+        "document": "terraform-plan-014",
+        "type": "resource_name",
+        "start": 663,
+        "end": 684
+      },
+      {
+        "document": "terraform-plan-015",
+        "type": "resource_name",
+        "start": 664,
+        "end": 687
+      },
+      {
+        "document": "terraform-plan-016",
+        "type": "resource_name",
+        "start": 663,
+        "end": 685
+      },
+      {
+        "document": "terraform-plan-017",
+        "type": "resource_name",
+        "start": 660,
+        "end": 681
+      },
+      {
+        "document": "terraform-plan-018",
+        "type": "resource_name",
+        "start": 663,
+        "end": 686
+      },
+      {
+        "document": "terraform-plan-019",
+        "type": "resource_name",
+        "start": 661,
+        "end": 684
+      },
+      {
+        "document": "kubeconfig-000",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 61
+      },
+      {
+        "document": "kubeconfig-001",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 64
+      },
+      {
+        "document": "kubeconfig-002",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 61
+      },
+      {
+        "document": "kubeconfig-003",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 63
+      },
+      {
+        "document": "kubeconfig-004",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 64
+      },
+      {
+        "document": "kubeconfig-005",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 61
+      },
+      {
+        "document": "kubeconfig-006",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 61
+      },
+      {
+        "document": "kubeconfig-007",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 61
+      },
+      {
+        "document": "kubeconfig-008",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 61
+      },
+      {
+        "document": "kubeconfig-009",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 66
+      },
+      {
+        "document": "kubeconfig-010",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 66
+      },
+      {
+        "document": "kubeconfig-011",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 66
+      },
+      {
+        "document": "kubeconfig-012",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 63
+      },
+      {
+        "document": "kubeconfig-013",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 63
+      },
+      {
+        "document": "kubeconfig-014",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 63
+      },
+      {
+        "document": "kubeconfig-015",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 64
+      },
+      {
+        "document": "kubeconfig-016",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 61
+      },
+      {
+        "document": "kubeconfig-017",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 66
+      },
+      {
+        "document": "kubeconfig-018",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 64
+      },
+      {
+        "document": "kubeconfig-019",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 66
+      },
+      {
+        "document": "incident-note-000",
+        "type": "person",
+        "start": 54,
+        "end": 65
+      },
+      {
+        "document": "incident-note-000",
+        "type": "organization",
+        "start": 97,
+        "end": 107
+      },
+      {
+        "document": "incident-note-000",
+        "type": "person",
+        "start": 230,
+        "end": 245
+      },
+      {
+        "document": "incident-note-001",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-001",
+        "type": "organization",
+        "start": 98,
+        "end": 108
+      },
+      {
+        "document": "incident-note-001",
+        "type": "person",
+        "start": 231,
+        "end": 242
+      },
+      {
+        "document": "incident-note-002",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-002",
+        "type": "organization",
+        "start": 98,
+        "end": 110
+      },
+      {
+        "document": "incident-note-002",
+        "type": "person",
+        "start": 233,
+        "end": 244
+      },
+      {
+        "document": "incident-note-003",
+        "type": "person",
+        "start": 54,
+        "end": 65
+      },
+      {
+        "document": "incident-note-003",
+        "type": "organization",
+        "start": 97,
+        "end": 105
+      },
+      {
+        "document": "incident-note-003",
+        "type": "person",
+        "start": 228,
+        "end": 240
+      },
+      {
+        "document": "incident-note-004",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-004",
+        "type": "organization",
+        "start": 98,
+        "end": 106
+      },
+      {
+        "document": "incident-note-004",
+        "type": "person",
+        "start": 228,
+        "end": 240
+      },
+      {
+        "document": "incident-note-005",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-005",
+        "type": "organization",
+        "start": 98,
+        "end": 108
+      },
+      {
+        "document": "incident-note-005",
+        "type": "person",
+        "start": 230,
+        "end": 241
+      },
+      {
+        "document": "incident-note-006",
+        "type": "person",
+        "start": 54,
+        "end": 67
+      },
+      {
+        "document": "incident-note-006",
+        "type": "organization",
+        "start": 99,
+        "end": 109
+      },
+      {
+        "document": "incident-note-006",
+        "type": "person",
+        "start": 232,
+        "end": 243
+      },
+      {
+        "document": "incident-note-007",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-007",
+        "type": "organization",
+        "start": 98,
+        "end": 106
+      },
+      {
+        "document": "incident-note-007",
+        "type": "person",
+        "start": 229,
+        "end": 241
+      },
+      {
+        "document": "incident-note-008",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-008",
+        "type": "organization",
+        "start": 98,
+        "end": 108
+      },
+      {
+        "document": "incident-note-008",
+        "type": "person",
+        "start": 231,
+        "end": 243
+      },
+      {
+        "document": "incident-note-009",
+        "type": "person",
+        "start": 54,
+        "end": 65
+      },
+      {
+        "document": "incident-note-009",
+        "type": "organization",
+        "start": 97,
+        "end": 108
+      },
+      {
+        "document": "incident-note-009",
+        "type": "person",
+        "start": 230,
+        "end": 242
+      },
+      {
+        "document": "incident-note-010",
+        "type": "person",
+        "start": 54,
+        "end": 65
+      },
+      {
+        "document": "incident-note-010",
+        "type": "organization",
+        "start": 97,
+        "end": 107
+      },
+      {
+        "document": "incident-note-010",
+        "type": "person",
+        "start": 230,
+        "end": 240
+      },
+      {
+        "document": "incident-note-011",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-011",
+        "type": "organization",
+        "start": 98,
+        "end": 108
+      },
+      {
+        "document": "incident-note-011",
+        "type": "person",
+        "start": 230,
+        "end": 245
+      },
+      {
+        "document": "incident-note-012",
+        "type": "person",
+        "start": 54,
+        "end": 65
+      },
+      {
+        "document": "incident-note-012",
+        "type": "organization",
+        "start": 97,
+        "end": 107
+      },
+      {
+        "document": "incident-note-012",
+        "type": "person",
+        "start": 229,
+        "end": 241
+      },
+      {
+        "document": "incident-note-013",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-013",
+        "type": "organization",
+        "start": 98,
+        "end": 110
+      },
+      {
+        "document": "incident-note-013",
+        "type": "person",
+        "start": 233,
+        "end": 245
+      },
+      {
+        "document": "incident-note-014",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-014",
+        "type": "organization",
+        "start": 98,
+        "end": 109
+      },
+      {
+        "document": "incident-note-014",
+        "type": "person",
+        "start": 232,
+        "end": 244
+      },
+      {
+        "document": "incident-note-015",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-015",
+        "type": "organization",
+        "start": 98,
+        "end": 106
+      },
+      {
+        "document": "incident-note-015",
+        "type": "person",
+        "start": 228,
+        "end": 241
+      },
+      {
+        "document": "incident-note-016",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-016",
+        "type": "organization",
+        "start": 98,
+        "end": 108
+      },
+      {
+        "document": "incident-note-016",
+        "type": "person",
+        "start": 231,
+        "end": 242
+      },
+      {
+        "document": "incident-note-017",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-017",
+        "type": "organization",
+        "start": 98,
+        "end": 106
+      },
+      {
+        "document": "incident-note-017",
+        "type": "person",
+        "start": 228,
+        "end": 239
+      },
+      {
+        "document": "incident-note-018",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-018",
+        "type": "organization",
+        "start": 98,
+        "end": 106
+      },
+      {
+        "document": "incident-note-018",
+        "type": "person",
+        "start": 229,
+        "end": 241
+      },
+      {
+        "document": "incident-note-019",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-019",
+        "type": "organization",
+        "start": 98,
+        "end": 106
+      },
+      {
+        "document": "incident-note-019",
+        "type": "person",
+        "start": 229,
+        "end": 241
+      }
+    ],
+    "false_positives": []
+  },
+  "dev": {
+    "documents": 8,
+    "leaked_documents": 3,
+    "blocked_documents": 0,
+    "merged_spans": 0,
+    "recall": 0.8475,
+    "precision": 0.9167,
+    "f2": 0.8605,
+    "per_type": {
+      "api_token": {
+        "planted": 3,
+        "caught": 3,
+        "recall": 1.0,
+        "masked": 2,
+        "precision": 1.0
+      },
+      "arn": {
+        "planted": 0,
+        "caught": 0,
+        "recall": 1.0,
+        "masked": 2,
+        "precision": 1.0
+      },
+      "aws_account_id": {
+        "planted": 5,
+        "caught": 5,
+        "recall": 1.0,
+        "masked": 2,
+        "precision": 1.0
+      },
+      "aws_resource_id": {
+        "planted": 3,
+        "caught": 3,
+        "recall": 1.0,
+        "masked": 3,
+        "precision": 1.0
+      },
+      "cluster_name": {
+        "planted": 2,
+        "caught": 1,
+        "recall": 0.5,
+        "masked": 1,
+        "precision": 1.0
+      },
+      "email": {
+        "planted": 3,
+        "caught": 3,
+        "recall": 1.0,
+        "masked": 3,
+        "precision": 1.0
+      },
+      "generic_secret": {
+        "planted": 1,
+        "caught": 1,
+        "recall": 1.0,
+        "masked": 3,
+        "precision": 1.0
+      },
+      "hostname": {
+        "planted": 8,
+        "caught": 7,
+        "recall": 0.875,
+        "masked": 7,
+        "precision": 1.0
+      },
+      "ip_address": {
+        "planted": 10,
+        "caught": 10,
+        "recall": 1.0,
+        "masked": 10,
+        "precision": 1.0
+      },
+      "ip_network": {
+        "planted": 3,
+        "caught": 3,
+        "recall": 1.0,
+        "masked": 3,
+        "precision": 1.0
+      },
+      "organization": {
+        "planted": 3,
+        "caught": 1,
+        "recall": 0.3333,
+        "masked": 1,
+        "precision": 1.0
+      },
+      "password": {
+        "planted": 5,
+        "caught": 5,
+        "recall": 1.0,
+        "masked": 3,
+        "precision": 1.0
+      },
+      "person": {
+        "planted": 7,
+        "caught": 2,
+        "recall": 0.2857,
+        "masked": 6,
+        "precision": 0.3333
+      },
+      "resource_name": {
+        "planted": 6,
+        "caught": 6,
+        "recall": 1.0,
+        "masked": 2,
+        "precision": 1.0
+      }
+    },
+    "caught_by_layer": {
+      "propagation": 4,
+      "rules": 46
+    },
+    "misses": [
+      {
+        "document": "docker-compose",
+        "type": "organization",
+        "start": 36,
+        "end": 43
+      },
+      {
+        "document": "helm-values",
+        "type": "hostname",
+        "start": 188,
+        "end": 203
+      },
+      {
+        "document": "slack-incident",
+        "type": "person",
+        "start": 8,
+        "end": 19
+      },
+      {
+        "document": "slack-incident",
+        "type": "person",
+        "start": 77,
+        "end": 89
+      },
+      {
+        "document": "slack-incident",
+        "type": "person",
+        "start": 154,
+        "end": 166
+      },
+      {
+        "document": "slack-incident",
+        "type": "cluster_name",
+        "start": 180,
+        "end": 192
+      },
+      {
+        "document": "slack-incident",
+        "type": "person",
+        "start": 225,
+        "end": 236
+      },
+      {
+        "document": "slack-incident",
+        "type": "organization",
+        "start": 256,
+        "end": 273
+      },
+      {
+        "document": "slack-incident",
+        "type": "person",
+        "start": 305,
+        "end": 317
+      }
+    ],
+    "false_positives": [
+      {
+        "document": "helm-values",
+        "type": "person",
+        "start": 29,
+        "end": 37
+      },
+      {
+        "document": "helm-values",
+        "type": "person",
+        "start": 114,
+        "end": 122
+      },
+      {
+        "document": "helm-values",
+        "type": "person",
+        "start": 257,
+        "end": 265
+      },
+      {
+        "document": "helm-values",
+        "type": "person",
+        "start": 307,
+        "end": 315
+      }
+    ]
+  },
+  "dev (no propagation)": {
+    "documents": 8,
+    "leaked_documents": 3,
+    "blocked_documents": 1,
+    "merged_spans": 0,
+    "recall": 0.8475,
+    "precision": 1.0,
+    "f2": 0.8741,
+    "per_type": {
+      "api_token": {
+        "planted": 3,
+        "caught": 3,
+        "recall": 1.0,
+        "masked": 2,
+        "precision": 1.0
+      },
+      "arn": {
+        "planted": 0,
+        "caught": 0,
+        "recall": 1.0,
+        "masked": 1,
+        "precision": 1.0
+      },
+      "aws_account_id": {
+        "planted": 5,
+        "caught": 5,
+        "recall": 1.0,
+        "masked": 2,
+        "precision": 1.0
+      },
+      "aws_resource_id": {
+        "planted": 3,
+        "caught": 3,
+        "recall": 1.0,
+        "masked": 3,
+        "precision": 1.0
+      },
+      "cluster_name": {
+        "planted": 2,
+        "caught": 1,
+        "recall": 0.5,
+        "masked": 1,
+        "precision": 1.0
+      },
+      "email": {
+        "planted": 3,
+        "caught": 3,
+        "recall": 1.0,
+        "masked": 3,
+        "precision": 1.0
+      },
+      "generic_secret": {
+        "planted": 1,
+        "caught": 1,
+        "recall": 1.0,
+        "masked": 2,
+        "precision": 1.0
+      },
+      "hostname": {
+        "planted": 8,
+        "caught": 7,
+        "recall": 0.875,
+        "masked": 6,
+        "precision": 1.0
+      },
+      "ip_address": {
+        "planted": 10,
+        "caught": 10,
+        "recall": 1.0,
+        "masked": 10,
+        "precision": 1.0
+      },
+      "ip_network": {
+        "planted": 3,
+        "caught": 3,
+        "recall": 1.0,
+        "masked": 3,
+        "precision": 1.0
+      },
+      "organization": {
+        "planted": 3,
+        "caught": 1,
+        "recall": 0.3333,
+        "masked": 1,
+        "precision": 1.0
+      },
+      "password": {
+        "planted": 5,
+        "caught": 5,
+        "recall": 1.0,
+        "masked": 2,
+        "precision": 1.0
+      },
+      "person": {
+        "planted": 7,
+        "caught": 2,
+        "recall": 0.2857,
+        "masked": 2,
+        "precision": 1.0
+      },
+      "resource_name": {
+        "planted": 6,
+        "caught": 6,
+        "recall": 1.0,
+        "masked": 2,
+        "precision": 1.0
+      }
+    },
+    "caught_by_layer": {
+      "rules": 50
+    },
+    "misses": [
+      {
+        "document": "docker-compose",
+        "type": "organization",
+        "start": 36,
+        "end": 43
+      },
+      {
+        "document": "helm-values",
+        "type": "hostname",
+        "start": 188,
+        "end": 203
+      },
+      {
+        "document": "slack-incident",
+        "type": "person",
+        "start": 8,
+        "end": 19
+      },
+      {
+        "document": "slack-incident",
+        "type": "person",
+        "start": 77,
+        "end": 89
+      },
+      {
+        "document": "slack-incident",
+        "type": "person",
+        "start": 154,
+        "end": 166
+      },
+      {
+        "document": "slack-incident",
+        "type": "cluster_name",
+        "start": 180,
+        "end": 192
+      },
+      {
+        "document": "slack-incident",
+        "type": "person",
+        "start": 225,
+        "end": 236
+      },
+      {
+        "document": "slack-incident",
+        "type": "organization",
+        "start": 256,
+        "end": 273
+      },
+      {
+        "document": "slack-incident",
+        "type": "person",
+        "start": 305,
+        "end": 317
+      }
+    ],
+    "false_positives": []
+  },
+  "holdout": {
+    "documents": 0,
+    "leaked_documents": 0,
+    "blocked_documents": 0,
+    "merged_spans": 0,
+    "recall": 1.0,
+    "precision": 1.0,
+    "f2": 1.0,
+    "per_type": {},
+    "caught_by_layer": {},
+    "misses": [],
+    "false_positives": []
+  },
+  "holdout (no propagation)": {
+    "documents": 0,
+    "leaked_documents": 0,
+    "blocked_documents": 0,
+    "merged_spans": 0,
+    "recall": 1.0,
+    "precision": 1.0,
+    "f2": 1.0,
+    "per_type": {},
+    "caught_by_layer": {},
+    "misses": [],
+    "false_positives": []
+  }
+}

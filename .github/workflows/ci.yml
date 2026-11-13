@@ -34,4 +34,5 @@ jobs:
       - name: Tests
         run: uv run --frozen pytest
 
-      # Phase 1 adds: `uv run --frozen cloakops bench --fail-under-recall ...`
+      - name: Benchmark (recall ratchet)
+        run: uv run --frozen python bench/run.py

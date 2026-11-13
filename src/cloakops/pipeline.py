@@ -36,15 +36,19 @@ class Pipeline:
         session: Session | None = None,
         propagator: Propagator | None = None,
         restore_categories: Iterable[Category] | None = None,
+        propagate: bool = True,
     ) -> None:
         self.detectors = tuple(detectors)
         self.session = session if session is not None else Session()
         self.propagator = propagator if propagator is not None else Propagator()
         self._pseudonymizer = Pseudonymizer(self.session)
         self._reinjector = Reinjector(self.session, restore_categories)
+        self._propagate = propagate  # off only to measure what propagation adds (benchmark)
 
     def detect(self, text: str) -> tuple[list[Span], int]:
         spans = resolve_overlaps(run_detectors(text, self.detectors))
+        if not self._propagate:
+            return spans, 0
         self.propagator.learn(text, spans)
         extra = self.propagator.expand(text)
         if not extra:

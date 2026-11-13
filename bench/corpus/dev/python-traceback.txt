@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/app/worker/sync.py", line 88, in run
+    conn = psycopg.connect("postgresql://etl:⟦password|w1nter-Sun-42⟧@⟦hostname|etl-db.c2xk9qz1pl7v.eu-west-3.rds.amazonaws.com⟧:5432/warehouse")
+  File "/usr/local/lib/python3.12/site-packages/psycopg/connection.py", line 119, in connect
+    raise last_ex.with_traceback(None)
+psycopg.OperationalError: connection to server at "⟦hostname|etl-db.c2xk9qz1pl7v.eu-west-3.rds.amazonaws.com⟧" (⟦ip_address|10.30.12.77⟧), port 5432 failed: timeout expired

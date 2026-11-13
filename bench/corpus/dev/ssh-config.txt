@@ -1,0 +1,11 @@
+Host bastion
+    HostName ⟦ip_address|3.248.17.92⟧
+    User ⟦person|lmercier⟧
+    IdentityFile ~/.ssh/id_ed25519
+
+Host *.korvane.internal
+    ProxyJump bastion
+    User ec2-user
+
+Host build
+    HostName ⟦hostname|build-03.korvane.internal⟧

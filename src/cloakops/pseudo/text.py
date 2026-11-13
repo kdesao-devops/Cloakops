@@ -88,7 +88,9 @@ _INFRASTRUCTURE = """
     write admin main core shared common platform infra network vpc subnet sg lb alb nlb elb eks
     ecs ecr rds s3 iam role roles policy policies user users group groups lambda function
     functions bucket kms key keys secret secrets config configs kube system namespace deployment
-    pod pods job jobs cron
+    pod pods job jobs cron exports export imports reports uploads downloads releases archive
+    archives deployer deployers runner runners reader writer operator operators bot ci cd ec2
+    root ubuntu centos debian alpine
 """
 _AWS_AND_REGIONS = """
     us eu ap sa ca me af il mx cn gov iso east west north south central northeast southeast
