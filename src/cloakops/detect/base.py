@@ -11,10 +11,11 @@ from __future__ import annotations
 from collections.abc import Iterable, Sequence
 from typing import Protocol
 
+from cloakops.errors import FailClosedError
 from cloakops.model import Span
 
 
-class DetectionError(RuntimeError):
+class DetectionError(FailClosedError):
     """A detector failed or misbehaved. The input must not leave the machine."""
 
 

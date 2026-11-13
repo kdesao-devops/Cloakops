@@ -1,6 +1,6 @@
 # 0007. Sensitive-values dictionary: session propagation, seeded list, then a learned hashed store
 
-Date: 2026-11-13 · Status: accepted
+Date: 2026-11-13 · Status: accepted · Extended by ADR 0012 (exact-value propagation)
 
 ## Context
 

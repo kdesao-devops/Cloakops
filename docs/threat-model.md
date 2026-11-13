@@ -74,6 +74,9 @@ Only pseudonymized text crosses the boundary.
   are published, not hidden.
 - **False positives (over-masking).** They harm answer quality, not confidentiality. Measured as
   precision. When in doubt, mask.
+- **Non-distinctive values.** Short secrets (a 3-digit PIN) or values equal to a common word
+  (a password `admin`) are masked where detected but neither propagated nor leak-checked: they
+  cannot be told apart from ordinary text (ADR 0012).
 - **Pseudonym drift.** The model may rewrite a pseudonym (reformat an ARN, derive a new IP from a
   masked CIDR). The real value can then not be restored automatically. Measured in phase 3.
 

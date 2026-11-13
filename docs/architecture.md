@@ -20,7 +20,7 @@ input text
 [pseudonymize] ── per-session HMAC key + per-type format-preserving generators
    │              mapping table: pseudonym → real value
    ▼
-[re-scan output] ── any original value or new detection left? → fail, write nothing
+[re-scan output] ── any original value or new detection left? → fail, write nothing (ADR 0012)
    ▼
 pseudonymized text ──► LLM ──► answer ──► [re-inject] ──► answer with real values
 ```
@@ -32,9 +32,11 @@ src/cloakops/
 ├── cli.py            mask / unmask / scan / bench
 ├── model.py          Span, EntityType, Category (spans hold offsets, never values)
 ├── resolve.py        overlap resolution (ADR 0006)
-├── pipeline.py       detect → resolve → propagate → pseudonymize → re-scan
+├── errors.py         FailClosedError: the one error type that means "send nothing"
+├── pipeline.py       detect → resolve → propagate → pseudonymize → re-scan (ADR 0012)
 ├── policy.py         enabled entity types, risk level (YAML)
-├── propagate.py      session propagation + seed dictionary (ADR 0007)
+├── propagate.py      exact values + name words + seed dictionary (ADR 0007, 0012)
+├── rescan.py         output re-scan: original values, re-detection (ADR 0012)
 ├── detect/
 │   ├── base.py       Detector protocol, fail-closed runner (NER/LLM layers plug in here)
 │   └── rules/        deterministic layer (ADR 0008)
@@ -70,4 +72,4 @@ See [docs/adr](adr/). Key ones: layered detection (0002), keyed structure-preser
 pseudonymization (0003), recall-first benchmark (0004), text-level detection (0005), overlap
 resolution (0006), sensitive-values dictionary (0007), rules
 layer conventions (0008), masking of non-secret identifiers (0009),
-coherent and syntax-safe pseudonyms (0010), re-injection (0011).
+coherent and syntax-safe pseudonyms (0010), re-injection (0011), propagation and output re-scan (0012).

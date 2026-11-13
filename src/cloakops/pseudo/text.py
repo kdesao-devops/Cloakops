@@ -130,3 +130,11 @@ def _pseudo_run(run: str, derivation: KeyedDerivation) -> str:
 
 def pseudo_words(value: str, derivation: KeyedDerivation) -> str:
     return _RUN.sub(lambda m: _pseudo_run(m.group(), derivation), value)
+
+
+def is_generic(value: str) -> bool:
+    """True if every alphanumeric run is a kept generic word or a short number: the value says
+    nothing specific (`prod`, `eu-west-1`, `core`). Such values are neither propagated nor
+    leak-checked, because the same words legitimately stay in clear inside other pseudonyms."""
+    runs = _RUN.findall(_ESCAPES.sub("", value))
+    return all(r.lower() in KEEP_WORDS or (r.isdigit() and len(r) <= 2) for r in runs)

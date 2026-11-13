@@ -17,6 +17,7 @@ import re
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 
+from cloakops.errors import FailClosedError
 from cloakops.model import EntityType, Span
 from cloakops.pseudo.generators import BIJECTIVE, GENERATORS, KEEP_IF, Generator, opaque
 from cloakops.pseudo.keyed import KeyedDerivation
@@ -45,14 +46,16 @@ def _scalar_kind(value: str) -> str:
     return "string"
 
 
-class PseudonymizationError(RuntimeError):
+class PseudonymizationError(FailClosedError):
     """No acceptable pseudonym could be produced. The input must not leave the machine."""
 
 
 @dataclass(frozen=True, slots=True)
 class Replacement:
-    span: Span
+    span: Span  # position in the input
     pseudonym: str
+    output_start: int  # position of the pseudonym in the output
+    output_end: int
 
 
 @dataclass(frozen=True, slots=True)
@@ -81,7 +84,11 @@ class Pseudonymizer:
         keep_if = KEEP_IF.get(entity_type)
         # A value without any letter or digit carries no information (and cannot be changed
         # while keeping its format).
-        if not has_content(value) or (keep_if is not None and keep_if(value)):
+        if (
+            not has_content(value)
+            or _scalar_kind(value).startswith("special:")  # true, off, null...: a boolean/null
+            or (keep_if is not None and keep_if(value))
+        ):
             key = (entity_type.value, value)
             if self.session.lookup(key) is None:
                 self.session.register(key, value, kept=True)
@@ -139,11 +146,15 @@ class Pseudonymizer:
             parts: list[str] = []
             replacements: list[Replacement] = []
             cursor = 0
+            output_length = 0
             for span in ordered:
                 pseudonym = self.pseudonym_for_span(span, text)
-                parts.append(text[cursor : span.start])
+                before = text[cursor : span.start]
+                parts.append(before)
                 parts.append(pseudonym)
-                replacements.append(Replacement(span, pseudonym))
+                output_start = output_length + len(before)
+                output_length = output_start + len(pseudonym)
+                replacements.append(Replacement(span, pseudonym, output_start, output_length))
                 cursor = span.end
             parts.append(text[cursor:])
         finally:

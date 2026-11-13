@@ -132,9 +132,9 @@ def classify_key(key: str) -> tuple[EntityType, float] | None:
 
 _PLACEHOLDERS = frozenset(
     {
-        "", "null", "none", "nil", "~", "true", "false", "yes", "no", "redacted", "<redacted>",
-        "[redacted]", "<sensitive>", "(sensitive)", "(sensitive value)", "(known after apply)",
-        "-", "|", ">", "{", "[", "{}", "[]",
+        "", "null", "none", "nil", "~", "true", "false", "yes", "no", "on", "off", "redacted",
+        "<redacted>", "[redacted]", "<sensitive>", "(sensitive)", "(sensitive value)",
+        "(known after apply)", "-", "|", ">", "{", "[", "{}", "[]",
     }
 )  # fmt: skip
 
