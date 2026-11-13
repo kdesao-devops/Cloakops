@@ -3,14 +3,17 @@
     detect -> resolve -> learn + propagate -> resolve -> pseudonymize -> re-scan
 
 `mask` either returns text that is safe to send, or raises a `FailClosedError` (detection
-failure, no acceptable pseudonym, leak found by the re-scan). There is no partial result.
+failure, no acceptable pseudonym). Residues found by the re-scan are redacted with a warning by
+default, or raise `LeakDetectedError` in strict mode (CI/CD, automation). The full re-detection
+of the output runs only in paranoid or strict mode (ADR 0014).
 `unmask` restores real values in the model's answer.
 """
 
 from __future__ import annotations
 
+import logging
 from collections.abc import Iterable, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from cloakops.detect.base import Detector, run_detectors
 from cloakops.model import Category, Span
@@ -18,7 +21,7 @@ from cloakops.propagate import Propagator
 from cloakops.pseudo.engine import Pseudonymizer, Replacement
 from cloakops.pseudo.session import Session
 from cloakops.reinject import ReinjectedText, Reinjector
-from cloakops.rescan import LeakDetectedError, rescan
+from cloakops.rescan import REDACTED, Finding, LeakDetectedError, redact, rescan
 from cloakops.resolve import resolve_overlaps
 
 
@@ -27,6 +30,10 @@ class MaskResult:
     text: str
     replacements: tuple[Replacement, ...]
     propagated: int  # spans added by propagation (for the audit receipt)
+    redactions: tuple[Finding, ...] = field(default=())  # residues redacted by the re-scan
+
+
+logger = logging.getLogger("cloakops")
 
 
 class Pipeline:
@@ -37,13 +44,21 @@ class Pipeline:
         propagator: Propagator | None = None,
         restore_categories: Iterable[Category] | None = None,
         propagate: bool = True,
+        strict: bool = False,
+        paranoid: bool = False,
+        redaction_marker: str = REDACTED,
     ) -> None:
+        """strict: re-scan findings raise instead of being redacted, and the full re-detection
+        runs. paranoid: the full re-detection runs, findings are redacted."""
         self.detectors = tuple(detectors)
         self.session = session if session is not None else Session()
         self.propagator = propagator if propagator is not None else Propagator()
         self._pseudonymizer = Pseudonymizer(self.session)
         self._reinjector = Reinjector(self.session, restore_categories)
         self._propagate = propagate  # off only to measure what propagation adds (benchmark)
+        self._strict = strict
+        self._redetect = strict or paranoid
+        self._marker = redaction_marker
 
     def detect(self, text: str) -> tuple[list[Span], int]:
         spans = resolve_overlaps(run_detectors(text, self.detectors))
@@ -59,10 +74,17 @@ class Pipeline:
     def mask(self, text: str) -> MaskResult:
         spans, propagated = self.detect(text)
         masked = self._pseudonymizer.pseudonymize_text(text, spans)
-        findings = rescan(text, masked, self.session, self.detectors)
-        if findings:
+        findings = rescan(text, masked, self.session, self.detectors if self._redetect else None)
+        if not findings:
+            return MaskResult(masked.text, masked.replacements, max(propagated, 0))
+        if self._strict:
             raise LeakDetectedError(findings)
-        return MaskResult(masked.text, masked.replacements, max(propagated, 0))
+        redacted = redact(masked, findings, self._marker)
+        kinds = sorted({f"{f.entity_type.value} ({f.reason})" for f in findings})
+        logger.warning(
+            "re-scan redacted %d residue(s) the masking missed: %s", len(findings), ", ".join(kinds)
+        )
+        return MaskResult(redacted.text, redacted.replacements, max(propagated, 0), tuple(findings))
 
     def unmask(self, text: str) -> ReinjectedText:
         return self._reinjector.reinject(text)

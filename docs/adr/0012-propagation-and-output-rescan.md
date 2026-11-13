@@ -1,6 +1,6 @@
 # 0012. Exact-value propagation, output re-scan and one fail-closed pipeline
 
-Date: 2026-11-14 · Status: accepted · Extends ADR 0007
+Date: 2026-11-14 · Status: accepted · Extends ADR 0007 · Amended by ADR 0014 (re-scan modes)
 
 ## Context
 

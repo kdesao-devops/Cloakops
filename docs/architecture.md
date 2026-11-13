@@ -20,7 +20,8 @@ input text
 [pseudonymize] ── per-session HMAC key + per-type format-preserving generators
    │              mapping table: pseudonym → real value
    ▼
-[re-scan output] ── any original value or new detection left? → fail, write nothing (ADR 0012)
+[re-scan output] ── original value left? → [REDACTED] + warning; --strict: fail closed;
+   │                 --paranoid/--strict: also re-run every detector (ADR 0012, 0014)
    ▼
 pseudonymized text ──► LLM ──► answer ──► [re-inject] ──► answer with real values
 ```
@@ -36,7 +37,7 @@ src/cloakops/
 ├── pipeline.py       detect → resolve → propagate → pseudonymize → re-scan (ADR 0012)
 ├── policy.py         enabled entity types, risk level (YAML)
 ├── propagate.py      exact values + name words + seed dictionary (ADR 0007, 0012)
-├── rescan.py         output re-scan: original values, re-detection (ADR 0012)
+├── rescan.py         output re-scan and redaction (ADR 0012, 0014)
 ├── detect/
 │   ├── base.py       Detector protocol, fail-closed runner (NER/LLM layers plug in here)
 │   └── rules/        deterministic layer (ADR 0008)
@@ -80,4 +81,4 @@ pseudonymization (0003), recall-first benchmark (0004), text-level detection (00
 resolution (0006), sensitive-values dictionary (0007), rules
 layer conventions (0008), masking of non-secret identifiers (0009),
 coherent and syntax-safe pseudonyms (0010), re-injection (0011), propagation and output re-scan (0012),
-benchmark implementation (0013).
+benchmark implementation (0013), re-scan modes (0014).

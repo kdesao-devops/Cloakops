@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import os
 from collections.abc import Sequence
 from pathlib import Path
@@ -110,35 +111,76 @@ def test_realistic_documents_pass_the_rescan_and_round_trip() -> None:
         assert p.unmask(masked.text).text == document
 
 
-def test_rescan_blocks_a_buggy_pseudonymizer_without_printing_values() -> None:
-    def leaky(value: str, ctx: Context, counter: int) -> str:
-        return f"{value} copy"  # a bug that keeps the original
+RESIDUE = "password: S3cr3tV4lue\nrun: echo S3cr3tV4lue | docker login --password-stdin\n"
 
-    p = pipeline()
-    p._pseudonymizer._generators[E.ORGANIZATION] = leaky
+
+def test_residue_is_redacted_with_a_warning_by_default(caplog: pytest.LogCaptureFixture) -> None:
+    # Propagation off: the second occurrence is a residue the masking missed.
+    p = Pipeline([RULES], Session(KeyedDerivation(KEY)), propagate=False)
+    with caplog.at_level(logging.WARNING, logger="cloakops"):
+        result = p.mask(RESIDUE)
+    assert "S3cr3tV4lue" not in result.text
+    assert "echo [REDACTED] | docker" in result.text
+    assert [f.reason for f in result.redactions] == ["original-value"]
+    assert "redacted 1 residue" in caplog.text and "S3cr3t" not in caplog.text
+    # Offsets of the replacements still point at the pseudonyms after redaction.
+    for r in result.replacements:
+        assert result.text[r.output_start : r.output_end] == r.pseudonym
+
+
+def test_strict_mode_fails_closed_on_a_residue_without_printing_values() -> None:
+    p = Pipeline([RULES], Session(KeyedDerivation(KEY)), propagate=False, strict=True)
     with pytest.raises(LeakDetectedError) as error:
-        p.mask("client: Jacquil Industries\n")
-    assert error.value.findings
-    assert "jacquil" not in str(error.value).lower()
+        p.mask(RESIDUE)
+    assert "S3cr3t" not in str(error.value)
     assert isinstance(error.value, FailClosedError)
 
 
-def test_rescan_blocks_a_value_the_detectors_find_in_the_output() -> None:
-    class ContextDependent:
-        """Misses "Codename Orion" in the input because of its context, finds it in the output.
-        The re-scan must catch what the first pass missed."""
+def test_buggy_pseudonymizer_fails_closed_even_by_default() -> None:
+    def leaky(value: str, ctx: Context, counter: int) -> str:
+        return f"{value} copy"  # a bug that keeps the original inside the pseudonym
 
-        name = "context-dependent"
-
-        def detect(self, text: str) -> Sequence[Span]:
-            if "client: Jacquil" in text:
-                return []
-            start = text.find("Orion")
-            return [Span(start, start + 5, E.RESOURCE_NAME, self.name)] if start >= 0 else []
-
-    p = Pipeline([ContextDependent(), RULES], Session(KeyedDerivation(KEY)))
+    p = pipeline()
+    p._pseudonymizer._generators[E.ORGANIZATION] = leaky
+    # The residue sits inside a pseudonym: redacting it would corrupt the output, so it raises.
     with pytest.raises(LeakDetectedError) as error:
-        p.mask("client: Jacquil\nCodename Orion\n")
+        p.mask("client: Jacquil Industries\n")
+    assert "jacquil" not in str(error.value).lower()
+
+
+class ContextDependent:
+    """Misses "Codename Orion" in the input because of its context, finds it in the output."""
+
+    name = "context-dependent"
+
+    def detect(self, text: str) -> Sequence[Span]:
+        if "client: Jacquil" in text:
+            return []
+        start = text.find("Orion")
+        return [Span(start, start + 5, E.RESOURCE_NAME, self.name)] if start >= 0 else []
+
+
+CONTEXT_DOC = "client: Jacquil\nCodename Orion\n"
+
+
+def test_full_redetection_is_off_by_default() -> None:
+    p = Pipeline([ContextDependent(), RULES], Session(KeyedDerivation(KEY)))
+    assert "Orion" in p.mask(CONTEXT_DOC).text  # fast check only: this miss goes through
+
+
+def test_paranoid_mode_redacts_what_the_detectors_find_in_the_output() -> None:
+    p = Pipeline([ContextDependent(), RULES], Session(KeyedDerivation(KEY)), paranoid=True)
+    result = p.mask(CONTEXT_DOC)
+    assert "Codename [REDACTED]" in result.text
+    assert [(f.reason, f.entity_type) for f in result.redactions] == [
+        ("redetected", E.RESOURCE_NAME)
+    ]
+
+
+def test_strict_mode_fails_closed_on_what_the_detectors_find_in_the_output() -> None:
+    p = Pipeline([ContextDependent(), RULES], Session(KeyedDerivation(KEY)), strict=True)
+    with pytest.raises(LeakDetectedError) as error:
+        p.mask(CONTEXT_DOC)
     [finding] = error.value.findings
     assert (finding.reason, finding.entity_type) == ("redetected", E.RESOURCE_NAME)
 

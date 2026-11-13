@@ -3,6 +3,8 @@
     "documents": 200,
     "leaked_documents": 40,
     "blocked_documents": 0,
+    "redacted_documents": 0,
+    "output_leaked_documents": 40,
     "merged_spans": 0,
     "recall": 0.9355,
     "precision": 1.0,
@@ -633,7 +635,9 @@
   "synthetic (no propagation)": {
     "documents": 200,
     "leaked_documents": 60,
-    "blocked_documents": 22,
+    "blocked_documents": 0,
+    "redacted_documents": 22,
+    "output_leaked_documents": 40,
     "merged_spans": 0,
     "recall": 0.9194,
     "precision": 1.0,
@@ -685,14 +689,14 @@
         "planted": 60,
         "caught": 60,
         "recall": 1.0,
-        "masked": 58,
+        "masked": 60,
         "precision": 1.0
       },
       "cluster_name": {
         "planted": 60,
         "caught": 40,
         "recall": 0.6667,
-        "masked": 20,
+        "masked": 40,
         "precision": 1.0
       },
       "email": {
@@ -713,7 +717,7 @@
         "planted": 140,
         "caught": 140,
         "recall": 1.0,
-        "masked": 118,
+        "masked": 140,
         "precision": 1.0
       },
       "ip_address": {
@@ -734,7 +738,7 @@
         "planted": 40,
         "caught": 40,
         "recall": 1.0,
-        "masked": 0,
+        "masked": 20,
         "precision": 1.0
       },
       "organization": {
@@ -748,7 +752,7 @@
         "planted": 80,
         "caught": 80,
         "recall": 1.0,
-        "masked": 56,
+        "masked": 60,
         "precision": 1.0
       },
       "person": {
@@ -769,7 +773,7 @@
         "planted": 80,
         "caught": 60,
         "recall": 0.75,
-        "masked": 18,
+        "masked": 20,
         "precision": 1.0
       }
     },
@@ -1384,6 +1388,8 @@
     "documents": 8,
     "leaked_documents": 3,
     "blocked_documents": 0,
+    "redacted_documents": 0,
+    "output_leaked_documents": 3,
     "merged_spans": 0,
     "recall": 0.8475,
     "precision": 0.9167,
@@ -1578,11 +1584,13 @@
   "dev (no propagation)": {
     "documents": 8,
     "leaked_documents": 3,
-    "blocked_documents": 1,
+    "blocked_documents": 0,
+    "redacted_documents": 1,
+    "output_leaked_documents": 3,
     "merged_spans": 0,
     "recall": 0.8475,
-    "precision": 1.0,
-    "f2": 0.8741,
+    "precision": 0.9778,
+    "f2": 0.8707,
     "per_type": {
       "api_token": {
         "planted": 3,
@@ -1595,7 +1603,7 @@
         "planted": 0,
         "caught": 0,
         "recall": 1.0,
-        "masked": 1,
+        "masked": 2,
         "precision": 1.0
       },
       "aws_account_id": {
@@ -1630,14 +1638,14 @@
         "planted": 1,
         "caught": 1,
         "recall": 1.0,
-        "masked": 2,
+        "masked": 3,
         "precision": 1.0
       },
       "hostname": {
         "planted": 8,
         "caught": 7,
         "recall": 0.875,
-        "masked": 6,
+        "masked": 7,
         "precision": 1.0
       },
       "ip_address": {
@@ -1665,15 +1673,15 @@
         "planted": 5,
         "caught": 5,
         "recall": 1.0,
-        "masked": 2,
+        "masked": 3,
         "precision": 1.0
       },
       "person": {
         "planted": 7,
         "caught": 2,
         "recall": 0.2857,
-        "masked": 2,
-        "precision": 1.0
+        "masked": 3,
+        "precision": 0.6667
       },
       "resource_name": {
         "planted": 6,
@@ -1742,12 +1750,21 @@
         "end": 317
       }
     ],
-    "false_positives": []
+    "false_positives": [
+      {
+        "document": "helm-values",
+        "type": "person",
+        "start": 257,
+        "end": 265
+      }
+    ]
   },
   "holdout": {
     "documents": 0,
     "leaked_documents": 0,
     "blocked_documents": 0,
+    "redacted_documents": 0,
+    "output_leaked_documents": 0,
     "merged_spans": 0,
     "recall": 1.0,
     "precision": 1.0,
@@ -1761,6 +1778,8 @@
     "documents": 0,
     "leaked_documents": 0,
     "blocked_documents": 0,
+    "redacted_documents": 0,
+    "output_leaked_documents": 0,
     "merged_spans": 0,
     "recall": 1.0,
     "precision": 1.0,

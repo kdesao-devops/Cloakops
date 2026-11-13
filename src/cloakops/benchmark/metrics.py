@@ -20,7 +20,7 @@ from dataclasses import dataclass, field
 from cloakops.benchmark.corpus import Document, Planted
 from cloakops.errors import FailClosedError
 from cloakops.model import EntityType, Span
-from cloakops.pipeline import Pipeline
+from cloakops.pipeline import MaskResult, Pipeline
 from cloakops.pseudo.text import KEEP_WORDS
 
 _RUN = re.compile(r"[^\W_]+")
@@ -39,6 +39,8 @@ class Report:
     documents: int = 0
     leaked_documents: int = 0
     blocked_documents: int = 0  # refused by the fail-closed pipeline (safe, but unusable)
+    redacted_documents: int = 0  # residues caught by the re-scan and redacted
+    output_leaked_documents: int = 0  # a planted value still in clear in the final output
     merged_spans: int = 0
     planted: Counter[EntityType] = field(default_factory=Counter)
     caught: Counter[EntityType] = field(default_factory=Counter)
@@ -81,6 +83,22 @@ def required_positions(text: str, planted: Planted) -> list[int]:
     return [planted.start + i for i in range(len(value)) if i not in keep]
 
 
+def _input_positions_of_redactions(text: str, result: MaskResult) -> set[int]:
+    """Re-scan findings are positions in the pre-redaction output, outside any pseudonym: map
+    them back to the input by undoing the length changes of the replacements before them."""
+    replacements = sorted(result.replacements, key=lambda r: r.span.start)
+    positions: set[int] = set()
+    for finding in result.redactions:
+        delta = 0
+        for r in replacements:
+            out_end = r.span.end + delta + len(r.pseudonym) - (r.span.end - r.span.start)
+            if out_end > finding.start:
+                break
+            delta += len(r.pseudonym) - (r.span.end - r.span.start)
+        positions.update(range(finding.start - delta, finding.end - delta))
+    return positions
+
+
 def _covered(spans: Iterable[Span]) -> set[int]:
     return {i for s in spans for i in range(s.start, s.end)}
 
@@ -120,6 +138,13 @@ def evaluate(documents: Iterable[Document], make_pipeline: Callable[[], Pipeline
         except FailClosedError:
             report.blocked_documents += 1
             continue
+        if result.redactions:
+            report.redacted_documents += 1
+        # Final output: what detection covered, plus what the re-scan redacted.
+        final = covered | _input_positions_of_redactions(doc.text, result)
+        report.output_leaked_documents += any(
+            not all(i in final for i in required_positions(doc.text, p)) for p in doc.planted
+        )
         for r in result.replacements:
             if r.pseudonym == r.span.text_of(doc.text):
                 continue  # kept value: not masked, so neither right nor wrong

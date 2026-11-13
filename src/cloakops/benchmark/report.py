@@ -14,6 +14,8 @@ def to_dict(report: Report) -> dict[str, Any]:
         "documents": report.documents,
         "leaked_documents": report.leaked_documents,
         "blocked_documents": report.blocked_documents,
+        "redacted_documents": report.redacted_documents,
+        "output_leaked_documents": report.output_leaked_documents,
         "merged_spans": report.merged_spans,
         "recall": round(report.recall(), 4),
         "precision": round(report.precision(), 4),
@@ -46,15 +48,19 @@ def _pct(x: float) -> str:
 
 def to_markdown(reports: dict[str, Report]) -> str:
     lines = ["# Benchmark results", ""]
-    lines += ["| Corpus | Docs | Recall | Precision | F2 | Docs with a leak | Blocked |"]
-    lines += ["|---|---|---|---|---|---|---|"]
+    lines += [
+        "| Corpus | Docs | Recall | Precision | F2 | Leak after detection | Redacted by re-scan "
+        "| Leak in final output | Blocked |",
+        "|---|---|---|---|---|---|---|---|---|",
+    ]
     for name, r in reports.items():
         if not r.documents:
-            lines.append(f"| {name} | 0 | n/a | n/a | n/a | n/a | n/a |")
+            lines.append(f"| {name} | 0 | n/a | n/a | n/a | n/a | n/a | n/a | n/a |")
             continue
         lines.append(
             f"| {name} | {r.documents} | {_pct(r.recall())} | {_pct(r.precision())} | "
-            f"{r.f2():.3f} | {r.leaked_documents} ({_pct(r.leak_rate())}) | {r.blocked_documents} |"
+            f"{r.f2():.3f} | {r.leaked_documents} ({_pct(r.leak_rate())}) | "
+            f"{r.redacted_documents} | {r.output_leaked_documents} | {r.blocked_documents} |"
         )
     for name, r in reports.items():
         if not r.documents:
