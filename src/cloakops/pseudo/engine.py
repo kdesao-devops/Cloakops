@@ -68,7 +68,7 @@ class Pseudonymizer:
         max_attempts: int = DEFAULT_MAX_ATTEMPTS,
         generators: Mapping[EntityType, Generator] | None = None,
     ) -> None:
-        self.session = session or Session()
+        self.session = session if session is not None else Session()
         self._max_attempts = max_attempts
         self._generators = dict(GENERATORS) | dict(generators or {})
         self._doc_tokens: frozenset[str] = frozenset()

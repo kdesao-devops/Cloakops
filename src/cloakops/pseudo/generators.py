@@ -39,6 +39,17 @@ Generator = Callable[[str, Context, int], str]
 
 E = EntityType
 
+
+def _name_component(component: str, ctx: Context, entity_type: EntityType = E.RESOURCE_NAME) -> str:
+    """A named part of a composite value (role name in an ARN, hostname label, email local
+    part). Generic parts are kept; the others go through the engine so they are registered on
+    their own: the model often quotes the role name without its ARN, and re-injection must
+    know it (ADR 0011)."""
+    if pseudo_words(component, ctx.derivation) == component:
+        return component
+    return ctx.pseudonym(entity_type, component)
+
+
 # --- Network ---------------------------------------------------------------------------------
 
 
@@ -73,7 +84,7 @@ def _host_label(label: str, ctx: Context) -> str:
     if encoded_ip and all(int(g) <= 255 for g in encoded_ip.groups()[1:]):
         address = ".".join(encoded_ip.groups()[1:])
         return f"{encoded_ip[1]}-" + ctx.pseudonym(E.IP_ADDRESS, address).replace(".", "-")
-    return pseudo_words(label, ctx.derivation)
+    return _name_component(label, ctx)
 
 
 def hostname(value: str, ctx: Context, counter: int) -> str:
@@ -98,7 +109,7 @@ def email(value: str, ctx: Context, counter: int) -> str:
     if counter:
         local = class_preserving(local, ctx.derivation, "email", counter)
     else:
-        local = pseudo_words(local, ctx.derivation)
+        local = _name_component(local, ctx, E.PERSON)
     if domain.lower() not in PUBLIC_MAIL_DOMAINS:
         domain = ctx.pseudonym(E.HOSTNAME, domain)
     return f"{local}@{domain}"
@@ -132,7 +143,7 @@ def _arn_segment(segment: str, ctx: Context) -> str:
         return ctx.pseudonym(E.AWS_RESOURCE_ID, segment)
     if re.fullmatch(r"[0-9]{12}", segment):
         return ctx.pseudonym(E.AWS_ACCOUNT_ID, segment)
-    return pseudo_words(segment, ctx.derivation)
+    return _name_component(segment, ctx)
 
 
 _EKS_NAMED_TYPES = frozenset(

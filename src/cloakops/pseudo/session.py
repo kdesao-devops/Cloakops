@@ -5,7 +5,8 @@ Phase 1 keeps it in memory. Phase 3 persists it encrypted with a TTL (ADR 0003).
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Iterator, Mapping
+from dataclasses import dataclass
 from types import MappingProxyType
 
 from cloakops.pseudo.keyed import KeyedDerivation
@@ -13,9 +14,16 @@ from cloakops.pseudo.keyed import KeyedDerivation
 MappingKey = tuple[str, str]  # (namespace, original value); namespace = entity type or merged:*
 
 
+@dataclass(frozen=True, slots=True)
+class MappingEntry:
+    namespace: str
+    original: str
+    pseudonym: str
+
+
 class Session:
     def __init__(self, derivation: KeyedDerivation | None = None) -> None:
-        self.derivation = derivation or KeyedDerivation.random()
+        self.derivation = derivation if derivation is not None else KeyedDerivation.random()
         self._forward: dict[MappingKey, str] = {}
         self._reverse: dict[str, str] = {}
         self._originals: set[str] = set()
@@ -23,6 +31,14 @@ class Session:
 
     def __repr__(self) -> str:
         return f"Session(<{len(self._forward)} mappings>)"
+
+    def __len__(self) -> int:
+        return len(self._forward)
+
+    def entries(self) -> Iterator[MappingEntry]:
+        """Every mapping, kept values included (pseudonym == original)."""
+        for (namespace, original), pseudonym in self._forward.items():
+            yield MappingEntry(namespace, original, pseudonym)
 
     def lookup(self, key: MappingKey) -> str | None:
         return self._forward.get(key)

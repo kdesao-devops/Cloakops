@@ -111,3 +111,13 @@ def test_fails_closed_when_no_pseudonym_is_acceptable() -> None:
     with pytest.raises(PseudonymizationError) as error:
         pseudonymizer.pseudonym(E.RESOURCE_NAME, "jacquil-secret-project")
     assert "jacquil" not in str(error.value)  # error messages never carry the value
+
+
+def test_a_given_key_gives_the_same_pseudonyms_in_every_engine() -> None:
+    # Regression: an empty Session is falsy (it has __len__); `session or Session()` used to
+    # silently replace it with a new session and a random key.
+    first = engine().pseudonym(E.AWS_ACCOUNT_ID, "123456789012")
+    assert engine().pseudonym(E.AWS_ACCOUNT_ID, "123456789012") == first
+    assert engine().session.derivation.digest("d", "v") == engine().session.derivation.digest(
+        "d", "v"
+    )
