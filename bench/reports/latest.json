@@ -533,6 +533,1256 @@
   "synthetic (no propagation)": {
     "documents": 280,
     "leaked_documents": 120,
+    "blocked_documents": 62,
+    "redacted_documents": 0,
+    "output_leaked_documents": 58,
+    "merged_spans": 0,
+    "recall": 0.8812,
+    "precision": 1.0,
+    "f2": 0.9026,
+    "per_type": {
+      "api_token": {
+        "planted": 80,
+        "caught": 80,
+        "recall": 1.0,
+        "masked": 80,
+        "precision": 1.0
+      },
+      "arn": {
+        "planted": 0,
+        "caught": 0,
+        "recall": 1.0,
+        "masked": 60,
+        "precision": 1.0
+      },
+      "aws_access_key_id": {
+        "planted": 40,
+        "caught": 40,
+        "recall": 1.0,
+        "masked": 40,
+        "precision": 1.0
+      },
+      "aws_account_id": {
+        "planted": 140,
+        "caught": 140,
+        "recall": 1.0,
+        "masked": 60,
+        "precision": 1.0
+      },
+      "aws_resource_id": {
+        "planted": 120,
+        "caught": 120,
+        "recall": 1.0,
+        "masked": 100,
+        "precision": 1.0
+      },
+      "aws_secret_access_key": {
+        "planted": 20,
+        "caught": 20,
+        "recall": 1.0,
+        "masked": 20,
+        "precision": 1.0
+      },
+      "bucket_name": {
+        "planted": 60,
+        "caught": 60,
+        "recall": 1.0,
+        "masked": 58,
+        "precision": 1.0
+      },
+      "cluster_name": {
+        "planted": 60,
+        "caught": 40,
+        "recall": 0.6667,
+        "masked": 20,
+        "precision": 1.0
+      },
+      "email": {
+        "planted": 100,
+        "caught": 100,
+        "recall": 1.0,
+        "masked": 80,
+        "precision": 1.0
+      },
+      "generic_secret": {
+        "planted": 40,
+        "caught": 40,
+        "recall": 1.0,
+        "masked": 80,
+        "precision": 1.0
+      },
+      "hostname": {
+        "planted": 220,
+        "caught": 160,
+        "recall": 0.7273,
+        "masked": 118,
+        "precision": 1.0
+      },
+      "ip_address": {
+        "planted": 140,
+        "caught": 140,
+        "recall": 1.0,
+        "masked": 140,
+        "precision": 1.0
+      },
+      "ip_network": {
+        "planted": 20,
+        "caught": 20,
+        "recall": 1.0,
+        "masked": 20,
+        "precision": 1.0
+      },
+      "jwt": {
+        "planted": 40,
+        "caught": 40,
+        "recall": 1.0,
+        "masked": 0,
+        "precision": 1.0
+      },
+      "organization": {
+        "planted": 220,
+        "caught": 177,
+        "recall": 0.8045,
+        "masked": 97,
+        "precision": 1.0
+      },
+      "password": {
+        "planted": 80,
+        "caught": 80,
+        "recall": 1.0,
+        "masked": 56,
+        "precision": 1.0
+      },
+      "person": {
+        "planted": 40,
+        "caught": 0,
+        "recall": 0.0,
+        "masked": 0,
+        "precision": 1.0
+      },
+      "private_key": {
+        "planted": 20,
+        "caught": 20,
+        "recall": 1.0,
+        "masked": 20,
+        "precision": 1.0
+      },
+      "resource_name": {
+        "planted": 100,
+        "caught": 80,
+        "recall": 0.8,
+        "masked": 38,
+        "precision": 1.0
+      }
+    },
+    "caught_by_layer": {
+      "rules": 1357
+    },
+    "misses": [
+      {
+        "document": "terraform-plan-000",
+        "type": "resource_name",
+        "start": 668,
+        "end": 691
+      },
+      {
+        "document": "terraform-plan-001",
+        "type": "resource_name",
+        "start": 669,
+        "end": 692
+      },
+      {
+        "document": "terraform-plan-002",
+        "type": "resource_name",
+        "start": 664,
+        "end": 684
+      },
+      {
+        "document": "terraform-plan-003",
+        "type": "resource_name",
+        "start": 669,
+        "end": 691
+      },
+      {
+        "document": "terraform-plan-004",
+        "type": "resource_name",
+        "start": 665,
+        "end": 686
+      },
+      {
+        "document": "terraform-plan-005",
+        "type": "resource_name",
+        "start": 662,
+        "end": 684
+      },
+      {
+        "document": "terraform-plan-006",
+        "type": "resource_name",
+        "start": 666,
+        "end": 688
+      },
+      {
+        "document": "terraform-plan-007",
+        "type": "resource_name",
+        "start": 665,
+        "end": 688
+      },
+      {
+        "document": "terraform-plan-008",
+        "type": "resource_name",
+        "start": 663,
+        "end": 684
+      },
+      {
+        "document": "terraform-plan-009",
+        "type": "resource_name",
+        "start": 665,
+        "end": 687
+      },
+      {
+        "document": "terraform-plan-010",
+        "type": "resource_name",
+        "start": 668,
+        "end": 690
+      },
+      {
+        "document": "terraform-plan-011",
+        "type": "resource_name",
+        "start": 667,
+        "end": 690
+      },
+      {
+        "document": "terraform-plan-012",
+        "type": "resource_name",
+        "start": 667,
+        "end": 690
+      },
+      {
+        "document": "terraform-plan-013",
+        "type": "resource_name",
+        "start": 664,
+        "end": 685
+      },
+      {
+        "document": "terraform-plan-014",
+        "type": "resource_name",
+        "start": 663,
+        "end": 684
+      },
+      {
+        "document": "terraform-plan-015",
+        "type": "resource_name",
+        "start": 664,
+        "end": 687
+      },
+      {
+        "document": "terraform-plan-016",
+        "type": "resource_name",
+        "start": 663,
+        "end": 685
+      },
+      {
+        "document": "terraform-plan-017",
+        "type": "resource_name",
+        "start": 660,
+        "end": 681
+      },
+      {
+        "document": "terraform-plan-018",
+        "type": "resource_name",
+        "start": 663,
+        "end": 686
+      },
+      {
+        "document": "terraform-plan-019",
+        "type": "resource_name",
+        "start": 661,
+        "end": 684
+      },
+      {
+        "document": "kubeconfig-000",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 61
+      },
+      {
+        "document": "kubeconfig-001",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 64
+      },
+      {
+        "document": "kubeconfig-002",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 61
+      },
+      {
+        "document": "kubeconfig-003",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 63
+      },
+      {
+        "document": "kubeconfig-004",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 64
+      },
+      {
+        "document": "kubeconfig-005",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 61
+      },
+      {
+        "document": "kubeconfig-006",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 61
+      },
+      {
+        "document": "kubeconfig-007",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 61
+      },
+      {
+        "document": "kubeconfig-008",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 61
+      },
+      {
+        "document": "kubeconfig-009",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 66
+      },
+      {
+        "document": "kubeconfig-010",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 66
+      },
+      {
+        "document": "kubeconfig-011",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 66
+      },
+      {
+        "document": "kubeconfig-012",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 63
+      },
+      {
+        "document": "kubeconfig-013",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 63
+      },
+      {
+        "document": "kubeconfig-014",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 63
+      },
+      {
+        "document": "kubeconfig-015",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 64
+      },
+      {
+        "document": "kubeconfig-016",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 61
+      },
+      {
+        "document": "kubeconfig-017",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 66
+      },
+      {
+        "document": "kubeconfig-018",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 64
+      },
+      {
+        "document": "kubeconfig-019",
+        "type": "cluster_name",
+        "start": 48,
+        "end": 66
+      },
+      {
+        "document": "incident-note-000",
+        "type": "person",
+        "start": 54,
+        "end": 65
+      },
+      {
+        "document": "incident-note-000",
+        "type": "person",
+        "start": 230,
+        "end": 245
+      },
+      {
+        "document": "incident-note-001",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-001",
+        "type": "person",
+        "start": 231,
+        "end": 242
+      },
+      {
+        "document": "incident-note-002",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-002",
+        "type": "organization",
+        "start": 98,
+        "end": 110
+      },
+      {
+        "document": "incident-note-002",
+        "type": "person",
+        "start": 233,
+        "end": 244
+      },
+      {
+        "document": "incident-note-003",
+        "type": "person",
+        "start": 54,
+        "end": 65
+      },
+      {
+        "document": "incident-note-003",
+        "type": "person",
+        "start": 228,
+        "end": 240
+      },
+      {
+        "document": "incident-note-004",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-004",
+        "type": "person",
+        "start": 228,
+        "end": 240
+      },
+      {
+        "document": "incident-note-005",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-005",
+        "type": "organization",
+        "start": 98,
+        "end": 108
+      },
+      {
+        "document": "incident-note-005",
+        "type": "person",
+        "start": 230,
+        "end": 241
+      },
+      {
+        "document": "incident-note-006",
+        "type": "person",
+        "start": 54,
+        "end": 67
+      },
+      {
+        "document": "incident-note-006",
+        "type": "person",
+        "start": 232,
+        "end": 243
+      },
+      {
+        "document": "incident-note-007",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-007",
+        "type": "person",
+        "start": 229,
+        "end": 241
+      },
+      {
+        "document": "incident-note-008",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-008",
+        "type": "person",
+        "start": 231,
+        "end": 243
+      },
+      {
+        "document": "incident-note-009",
+        "type": "person",
+        "start": 54,
+        "end": 65
+      },
+      {
+        "document": "incident-note-009",
+        "type": "person",
+        "start": 230,
+        "end": 242
+      },
+      {
+        "document": "incident-note-010",
+        "type": "person",
+        "start": 54,
+        "end": 65
+      },
+      {
+        "document": "incident-note-010",
+        "type": "person",
+        "start": 230,
+        "end": 240
+      },
+      {
+        "document": "incident-note-011",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-011",
+        "type": "person",
+        "start": 230,
+        "end": 245
+      },
+      {
+        "document": "incident-note-012",
+        "type": "person",
+        "start": 54,
+        "end": 65
+      },
+      {
+        "document": "incident-note-012",
+        "type": "person",
+        "start": 229,
+        "end": 241
+      },
+      {
+        "document": "incident-note-013",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-013",
+        "type": "organization",
+        "start": 98,
+        "end": 110
+      },
+      {
+        "document": "incident-note-013",
+        "type": "person",
+        "start": 233,
+        "end": 245
+      },
+      {
+        "document": "incident-note-014",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-014",
+        "type": "person",
+        "start": 232,
+        "end": 244
+      },
+      {
+        "document": "incident-note-015",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-015",
+        "type": "person",
+        "start": 228,
+        "end": 241
+      },
+      {
+        "document": "incident-note-016",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-016",
+        "type": "person",
+        "start": 231,
+        "end": 242
+      },
+      {
+        "document": "incident-note-017",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-017",
+        "type": "person",
+        "start": 228,
+        "end": 239
+      },
+      {
+        "document": "incident-note-018",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-018",
+        "type": "person",
+        "start": 229,
+        "end": 241
+      },
+      {
+        "document": "incident-note-019",
+        "type": "person",
+        "start": 54,
+        "end": 66
+      },
+      {
+        "document": "incident-note-019",
+        "type": "person",
+        "start": 229,
+        "end": 241
+      },
+      {
+        "document": "git-and-registry-000",
+        "type": "organization",
+        "start": 322,
+        "end": 328
+      },
+      {
+        "document": "git-and-registry-001",
+        "type": "organization",
+        "start": 314,
+        "end": 318
+      },
+      {
+        "document": "git-and-registry-002",
+        "type": "organization",
+        "start": 322,
+        "end": 328
+      },
+      {
+        "document": "git-and-registry-003",
+        "type": "organization",
+        "start": 314,
+        "end": 318
+      },
+      {
+        "document": "git-and-registry-004",
+        "type": "organization",
+        "start": 314,
+        "end": 318
+      },
+      {
+        "document": "git-and-registry-005",
+        "type": "organization",
+        "start": 314,
+        "end": 318
+      },
+      {
+        "document": "git-and-registry-006",
+        "type": "organization",
+        "start": 314,
+        "end": 318
+      },
+      {
+        "document": "git-and-registry-007",
+        "type": "organization",
+        "start": 314,
+        "end": 318
+      },
+      {
+        "document": "git-and-registry-008",
+        "type": "organization",
+        "start": 322,
+        "end": 328
+      },
+      {
+        "document": "git-and-registry-009",
+        "type": "organization",
+        "start": 322,
+        "end": 328
+      },
+      {
+        "document": "git-and-registry-010",
+        "type": "organization",
+        "start": 322,
+        "end": 328
+      },
+      {
+        "document": "git-and-registry-011",
+        "type": "organization",
+        "start": 314,
+        "end": 318
+      },
+      {
+        "document": "git-and-registry-012",
+        "type": "organization",
+        "start": 314,
+        "end": 318
+      },
+      {
+        "document": "git-and-registry-013",
+        "type": "organization",
+        "start": 322,
+        "end": 328
+      },
+      {
+        "document": "git-and-registry-014",
+        "type": "organization",
+        "start": 314,
+        "end": 318
+      },
+      {
+        "document": "git-and-registry-015",
+        "type": "organization",
+        "start": 322,
+        "end": 328
+      },
+      {
+        "document": "git-and-registry-016",
+        "type": "organization",
+        "start": 314,
+        "end": 318
+      },
+      {
+        "document": "git-and-registry-017",
+        "type": "organization",
+        "start": 322,
+        "end": 328
+      },
+      {
+        "document": "git-and-registry-018",
+        "type": "organization",
+        "start": 322,
+        "end": 328
+      },
+      {
+        "document": "git-and-registry-019",
+        "type": "organization",
+        "start": 314,
+        "end": 318
+      },
+      {
+        "document": "certificate-000",
+        "type": "hostname",
+        "start": 475,
+        "end": 488
+      },
+      {
+        "document": "certificate-000",
+        "type": "hostname",
+        "start": 494,
+        "end": 505
+      },
+      {
+        "document": "certificate-001",
+        "type": "hostname",
+        "start": 473,
+        "end": 484
+      },
+      {
+        "document": "certificate-001",
+        "type": "hostname",
+        "start": 490,
+        "end": 499
+      },
+      {
+        "document": "certificate-002",
+        "type": "hostname",
+        "start": 475,
+        "end": 488
+      },
+      {
+        "document": "certificate-002",
+        "type": "hostname",
+        "start": 494,
+        "end": 505
+      },
+      {
+        "document": "certificate-003",
+        "type": "hostname",
+        "start": 473,
+        "end": 484
+      },
+      {
+        "document": "certificate-003",
+        "type": "hostname",
+        "start": 490,
+        "end": 499
+      },
+      {
+        "document": "certificate-004",
+        "type": "hostname",
+        "start": 475,
+        "end": 488
+      },
+      {
+        "document": "certificate-004",
+        "type": "hostname",
+        "start": 494,
+        "end": 505
+      },
+      {
+        "document": "certificate-005",
+        "type": "hostname",
+        "start": 475,
+        "end": 488
+      },
+      {
+        "document": "certificate-005",
+        "type": "hostname",
+        "start": 494,
+        "end": 505
+      },
+      {
+        "document": "certificate-006",
+        "type": "hostname",
+        "start": 475,
+        "end": 488
+      },
+      {
+        "document": "certificate-006",
+        "type": "hostname",
+        "start": 494,
+        "end": 505
+      },
+      {
+        "document": "certificate-007",
+        "type": "hostname",
+        "start": 475,
+        "end": 488
+      },
+      {
+        "document": "certificate-007",
+        "type": "hostname",
+        "start": 494,
+        "end": 505
+      },
+      {
+        "document": "certificate-008",
+        "type": "hostname",
+        "start": 475,
+        "end": 488
+      },
+      {
+        "document": "certificate-008",
+        "type": "hostname",
+        "start": 494,
+        "end": 505
+      },
+      {
+        "document": "certificate-009",
+        "type": "hostname",
+        "start": 475,
+        "end": 488
+      },
+      {
+        "document": "certificate-009",
+        "type": "hostname",
+        "start": 494,
+        "end": 505
+      },
+      {
+        "document": "certificate-010",
+        "type": "hostname",
+        "start": 475,
+        "end": 488
+      },
+      {
+        "document": "certificate-010",
+        "type": "hostname",
+        "start": 494,
+        "end": 505
+      },
+      {
+        "document": "certificate-011",
+        "type": "hostname",
+        "start": 475,
+        "end": 488
+      },
+      {
+        "document": "certificate-011",
+        "type": "hostname",
+        "start": 494,
+        "end": 505
+      },
+      {
+        "document": "certificate-012",
+        "type": "hostname",
+        "start": 473,
+        "end": 484
+      },
+      {
+        "document": "certificate-012",
+        "type": "hostname",
+        "start": 490,
+        "end": 499
+      },
+      {
+        "document": "certificate-013",
+        "type": "hostname",
+        "start": 475,
+        "end": 488
+      },
+      {
+        "document": "certificate-013",
+        "type": "hostname",
+        "start": 494,
+        "end": 505
+      },
+      {
+        "document": "certificate-014",
+        "type": "hostname",
+        "start": 475,
+        "end": 488
+      },
+      {
+        "document": "certificate-014",
+        "type": "hostname",
+        "start": 494,
+        "end": 505
+      },
+      {
+        "document": "certificate-015",
+        "type": "hostname",
+        "start": 473,
+        "end": 484
+      },
+      {
+        "document": "certificate-015",
+        "type": "hostname",
+        "start": 490,
+        "end": 499
+      },
+      {
+        "document": "certificate-016",
+        "type": "hostname",
+        "start": 475,
+        "end": 488
+      },
+      {
+        "document": "certificate-016",
+        "type": "hostname",
+        "start": 494,
+        "end": 505
+      },
+      {
+        "document": "certificate-017",
+        "type": "hostname",
+        "start": 475,
+        "end": 488
+      },
+      {
+        "document": "certificate-017",
+        "type": "hostname",
+        "start": 494,
+        "end": 505
+      },
+      {
+        "document": "certificate-018",
+        "type": "hostname",
+        "start": 473,
+        "end": 484
+      },
+      {
+        "document": "certificate-018",
+        "type": "hostname",
+        "start": 490,
+        "end": 499
+      },
+      {
+        "document": "certificate-019",
+        "type": "hostname",
+        "start": 473,
+        "end": 484
+      },
+      {
+        "document": "certificate-019",
+        "type": "hostname",
+        "start": 490,
+        "end": 499
+      },
+      {
+        "document": "source-header-000",
+        "type": "organization",
+        "start": 135,
+        "end": 141
+      },
+      {
+        "document": "source-header-000",
+        "type": "hostname",
+        "start": 212,
+        "end": 225
+      },
+      {
+        "document": "source-header-001",
+        "type": "organization",
+        "start": 135,
+        "end": 141
+      },
+      {
+        "document": "source-header-001",
+        "type": "hostname",
+        "start": 212,
+        "end": 225
+      },
+      {
+        "document": "source-header-002",
+        "type": "organization",
+        "start": 138,
+        "end": 144
+      },
+      {
+        "document": "source-header-002",
+        "type": "hostname",
+        "start": 215,
+        "end": 228
+      },
+      {
+        "document": "source-header-003",
+        "type": "organization",
+        "start": 131,
+        "end": 135
+      },
+      {
+        "document": "source-header-003",
+        "type": "hostname",
+        "start": 206,
+        "end": 217
+      },
+      {
+        "document": "source-header-004",
+        "type": "organization",
+        "start": 131,
+        "end": 135
+      },
+      {
+        "document": "source-header-004",
+        "type": "hostname",
+        "start": 206,
+        "end": 217
+      },
+      {
+        "document": "source-header-005",
+        "type": "organization",
+        "start": 132,
+        "end": 136
+      },
+      {
+        "document": "source-header-005",
+        "type": "hostname",
+        "start": 207,
+        "end": 218
+      },
+      {
+        "document": "source-header-006",
+        "type": "organization",
+        "start": 132,
+        "end": 136
+      },
+      {
+        "document": "source-header-006",
+        "type": "hostname",
+        "start": 207,
+        "end": 218
+      },
+      {
+        "document": "source-header-007",
+        "type": "organization",
+        "start": 130,
+        "end": 134
+      },
+      {
+        "document": "source-header-007",
+        "type": "hostname",
+        "start": 205,
+        "end": 216
+      },
+      {
+        "document": "source-header-008",
+        "type": "organization",
+        "start": 138,
+        "end": 144
+      },
+      {
+        "document": "source-header-008",
+        "type": "hostname",
+        "start": 215,
+        "end": 228
+      },
+      {
+        "document": "source-header-009",
+        "type": "organization",
+        "start": 136,
+        "end": 142
+      },
+      {
+        "document": "source-header-009",
+        "type": "hostname",
+        "start": 213,
+        "end": 226
+      },
+      {
+        "document": "source-header-010",
+        "type": "organization",
+        "start": 135,
+        "end": 141
+      },
+      {
+        "document": "source-header-010",
+        "type": "hostname",
+        "start": 212,
+        "end": 225
+      },
+      {
+        "document": "source-header-011",
+        "type": "organization",
+        "start": 135,
+        "end": 141
+      },
+      {
+        "document": "source-header-011",
+        "type": "hostname",
+        "start": 212,
+        "end": 225
+      },
+      {
+        "document": "source-header-012",
+        "type": "organization",
+        "start": 135,
+        "end": 141
+      },
+      {
+        "document": "source-header-012",
+        "type": "hostname",
+        "start": 212,
+        "end": 225
+      },
+      {
+        "document": "source-header-013",
+        "type": "organization",
+        "start": 134,
+        "end": 140
+      },
+      {
+        "document": "source-header-013",
+        "type": "hostname",
+        "start": 211,
+        "end": 224
+      },
+      {
+        "document": "source-header-014",
+        "type": "organization",
+        "start": 131,
+        "end": 135
+      },
+      {
+        "document": "source-header-014",
+        "type": "hostname",
+        "start": 206,
+        "end": 217
+      },
+      {
+        "document": "source-header-015",
+        "type": "organization",
+        "start": 134,
+        "end": 138
+      },
+      {
+        "document": "source-header-015",
+        "type": "hostname",
+        "start": 209,
+        "end": 220
+      },
+      {
+        "document": "source-header-016",
+        "type": "organization",
+        "start": 135,
+        "end": 141
+      },
+      {
+        "document": "source-header-016",
+        "type": "hostname",
+        "start": 212,
+        "end": 225
+      },
+      {
+        "document": "source-header-017",
+        "type": "organization",
+        "start": 135,
+        "end": 141
+      },
+      {
+        "document": "source-header-017",
+        "type": "hostname",
+        "start": 212,
+        "end": 225
+      },
+      {
+        "document": "source-header-018",
+        "type": "organization",
+        "start": 137,
+        "end": 143
+      },
+      {
+        "document": "source-header-018",
+        "type": "hostname",
+        "start": 214,
+        "end": 227
+      },
+      {
+        "document": "source-header-019",
+        "type": "organization",
+        "start": 132,
+        "end": 136
+      },
+      {
+        "document": "source-header-019",
+        "type": "hostname",
+        "start": 207,
+        "end": 218
+      }
+    ],
+    "false_positives": []
+  },
+  "synthetic (no propagation, --redact)": {
+    "documents": 280,
+    "leaked_documents": 120,
     "blocked_documents": 0,
     "redacted_documents": 62,
     "output_leaked_documents": 80,
@@ -1980,6 +3230,171 @@
   "dev (no propagation)": {
     "documents": 8,
     "leaked_documents": 2,
+    "blocked_documents": 1,
+    "redacted_documents": 0,
+    "output_leaked_documents": 1,
+    "merged_spans": 0,
+    "recall": 0.8644,
+    "precision": 1.0,
+    "f2": 0.8885,
+    "per_type": {
+      "api_token": {
+        "planted": 3,
+        "caught": 3,
+        "recall": 1.0,
+        "masked": 2,
+        "precision": 1.0
+      },
+      "arn": {
+        "planted": 0,
+        "caught": 0,
+        "recall": 1.0,
+        "masked": 1,
+        "precision": 1.0
+      },
+      "aws_account_id": {
+        "planted": 5,
+        "caught": 5,
+        "recall": 1.0,
+        "masked": 2,
+        "precision": 1.0
+      },
+      "aws_resource_id": {
+        "planted": 3,
+        "caught": 3,
+        "recall": 1.0,
+        "masked": 3,
+        "precision": 1.0
+      },
+      "cluster_name": {
+        "planted": 2,
+        "caught": 1,
+        "recall": 0.5,
+        "masked": 1,
+        "precision": 1.0
+      },
+      "email": {
+        "planted": 3,
+        "caught": 3,
+        "recall": 1.0,
+        "masked": 3,
+        "precision": 1.0
+      },
+      "generic_secret": {
+        "planted": 1,
+        "caught": 1,
+        "recall": 1.0,
+        "masked": 2,
+        "precision": 1.0
+      },
+      "hostname": {
+        "planted": 8,
+        "caught": 7,
+        "recall": 0.875,
+        "masked": 6,
+        "precision": 1.0
+      },
+      "ip_address": {
+        "planted": 10,
+        "caught": 10,
+        "recall": 1.0,
+        "masked": 10,
+        "precision": 1.0
+      },
+      "ip_network": {
+        "planted": 3,
+        "caught": 3,
+        "recall": 1.0,
+        "masked": 3,
+        "precision": 1.0
+      },
+      "organization": {
+        "planted": 3,
+        "caught": 2,
+        "recall": 0.6667,
+        "masked": 2,
+        "precision": 1.0
+      },
+      "password": {
+        "planted": 5,
+        "caught": 5,
+        "recall": 1.0,
+        "masked": 2,
+        "precision": 1.0
+      },
+      "person": {
+        "planted": 7,
+        "caught": 2,
+        "recall": 0.2857,
+        "masked": 2,
+        "precision": 1.0
+      },
+      "resource_name": {
+        "planted": 6,
+        "caught": 6,
+        "recall": 1.0,
+        "masked": 2,
+        "precision": 1.0
+      }
+    },
+    "caught_by_layer": {
+      "rules": 51
+    },
+    "misses": [
+      {
+        "document": "helm-values",
+        "type": "hostname",
+        "start": 188,
+        "end": 203
+      },
+      {
+        "document": "slack-incident",
+        "type": "person",
+        "start": 8,
+        "end": 19
+      },
+      {
+        "document": "slack-incident",
+        "type": "person",
+        "start": 77,
+        "end": 89
+      },
+      {
+        "document": "slack-incident",
+        "type": "person",
+        "start": 154,
+        "end": 166
+      },
+      {
+        "document": "slack-incident",
+        "type": "cluster_name",
+        "start": 180,
+        "end": 192
+      },
+      {
+        "document": "slack-incident",
+        "type": "person",
+        "start": 225,
+        "end": 236
+      },
+      {
+        "document": "slack-incident",
+        "type": "organization",
+        "start": 256,
+        "end": 273
+      },
+      {
+        "document": "slack-incident",
+        "type": "person",
+        "start": 305,
+        "end": 317
+      }
+    ],
+    "false_positives": []
+  },
+  "dev (no propagation, --redact)": {
+    "documents": 8,
+    "leaked_documents": 2,
     "blocked_documents": 0,
     "redacted_documents": 1,
     "output_leaked_documents": 2,
@@ -2165,6 +3580,21 @@
     "false_positives": []
   },
   "holdout (no propagation)": {
+    "documents": 0,
+    "leaked_documents": 0,
+    "blocked_documents": 0,
+    "redacted_documents": 0,
+    "output_leaked_documents": 0,
+    "merged_spans": 0,
+    "recall": 1.0,
+    "precision": 1.0,
+    "f2": 1.0,
+    "per_type": {},
+    "caught_by_layer": {},
+    "misses": [],
+    "false_positives": []
+  },
+  "holdout (no propagation, --redact)": {
     "documents": 0,
     "leaked_documents": 0,
     "blocked_documents": 0,

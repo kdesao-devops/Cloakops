@@ -3,9 +3,9 @@
     detect -> resolve -> learn + propagate -> resolve -> pseudonymize -> re-scan
 
 `mask` either returns text that is safe to send, or raises a `FailClosedError` (detection
-failure, no acceptable pseudonym). Residues found by the re-scan are redacted with a warning by
-default, or raise `LeakDetectedError` in strict mode (CI/CD, automation). The full re-detection
-of the output runs only in paranoid or strict mode (ADR 0014).
+failure, no acceptable pseudonym, residue found by the re-scan). With `redact=True`
+(CLI `--redact`), residues are replaced by `[REDACTED]` with a warning instead. The full
+re-detection of the output runs only with `paranoid=True` (CLI `--paranoid`) (ADR 0014).
 `unmask` restores real values in the model's answer.
 """
 
@@ -44,20 +44,20 @@ class Pipeline:
         propagator: Propagator | None = None,
         restore_categories: Iterable[Category] | None = None,
         propagate: bool = True,
-        strict: bool = False,
+        redact: bool = False,
         paranoid: bool = False,
         redaction_marker: str = REDACTED,
     ) -> None:
-        """strict: re-scan findings raise instead of being redacted, and the full re-detection
-        runs. paranoid: the full re-detection runs, findings are redacted."""
+        """redact: re-scan residues are redacted with a warning instead of failing closed.
+        paranoid: the output is also re-scanned with every detector (costs a second detection)."""
         self.detectors = tuple(detectors)
         self.session = session if session is not None else Session()
         self.propagator = propagator if propagator is not None else Propagator()
         self._pseudonymizer = Pseudonymizer(self.session)
         self._reinjector = Reinjector(self.session, restore_categories)
         self._propagate = propagate  # off only to measure what propagation adds (benchmark)
-        self._strict = strict
-        self._redetect = strict or paranoid
+        self._redact = redact
+        self._redetect = paranoid
         self._marker = redaction_marker
 
     def detect(self, text: str) -> tuple[list[Span], int]:
@@ -77,7 +77,7 @@ class Pipeline:
         findings = rescan(text, masked, self.session, self.detectors if self._redetect else None)
         if not findings:
             return MaskResult(masked.text, masked.replacements, max(propagated, 0))
-        if self._strict:
+        if not self._redact:
             raise LeakDetectedError(findings)
         redacted = redact(masked, findings, self._marker)
         kinds = sorted({f"{f.entity_type.value} ({f.reason})" for f in findings})

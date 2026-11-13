@@ -33,9 +33,9 @@ REPORTS = BENCH / "reports"
 KEY = b"benchmark-fixed-key-not-a-secret"  # reproducible pseudonyms; never used for real data
 
 
-def make_pipeline(propagate: bool) -> Pipeline:
+def make_pipeline(propagate: bool, redact: bool = False) -> Pipeline:
     detector = default_rules_detector()
-    return Pipeline([detector], Session(KeyedDerivation(KEY)), propagate=propagate)
+    return Pipeline([detector], Session(KeyedDerivation(KEY)), propagate=propagate, redact=redact)
 
 
 def run() -> dict[str, Report]:
@@ -49,6 +49,9 @@ def run() -> dict[str, Report]:
         reports[name] = evaluate(documents, lambda: make_pipeline(propagate=True))
         reports[f"{name} (no propagation)"] = evaluate(
             documents, lambda: make_pipeline(propagate=False)
+        )
+        reports[f"{name} (no propagation, --redact)"] = evaluate(
+            documents, lambda: make_pipeline(propagate=False, redact=True)
         )
     return reports
 

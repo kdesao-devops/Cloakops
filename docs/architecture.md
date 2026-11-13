@@ -20,8 +20,8 @@ input text
 [pseudonymize] ── per-session HMAC key + per-type format-preserving generators
    │              mapping table: pseudonym → real value
    ▼
-[re-scan output] ── original value left? → [REDACTED] + warning; --strict: fail closed;
-   │                 --paranoid/--strict: also re-run every detector (ADR 0012, 0014)
+[re-scan output] ── original value left? → fail closed; --redact: [REDACTED] + warning;
+   │                 --paranoid: also re-run every detector (ADR 0012, 0014)
    ▼
 pseudonymized text ──► LLM ──► answer ──► [re-inject] ──► answer with real values
 ```

@@ -114,9 +114,17 @@ def test_realistic_documents_pass_the_rescan_and_round_trip() -> None:
 RESIDUE = "password: S3cr3tV4lue\nrun: echo S3cr3tV4lue | docker login --password-stdin\n"
 
 
-def test_residue_is_redacted_with_a_warning_by_default(caplog: pytest.LogCaptureFixture) -> None:
+def test_residue_fails_closed_by_default_without_printing_values() -> None:
     # Propagation off: the second occurrence is a residue the masking missed.
     p = Pipeline([RULES], Session(KeyedDerivation(KEY)), propagate=False)
+    with pytest.raises(LeakDetectedError) as error:
+        p.mask(RESIDUE)
+    assert "S3cr3t" not in str(error.value)
+    assert isinstance(error.value, FailClosedError)
+
+
+def test_redact_option_redacts_residues_with_a_warning(caplog: pytest.LogCaptureFixture) -> None:
+    p = Pipeline([RULES], Session(KeyedDerivation(KEY)), propagate=False, redact=True)
     with caplog.at_level(logging.WARNING, logger="cloakops"):
         result = p.mask(RESIDUE)
     assert "S3cr3tV4lue" not in result.text
@@ -128,19 +136,11 @@ def test_residue_is_redacted_with_a_warning_by_default(caplog: pytest.LogCapture
         assert result.text[r.output_start : r.output_end] == r.pseudonym
 
 
-def test_strict_mode_fails_closed_on_a_residue_without_printing_values() -> None:
-    p = Pipeline([RULES], Session(KeyedDerivation(KEY)), propagate=False, strict=True)
-    with pytest.raises(LeakDetectedError) as error:
-        p.mask(RESIDUE)
-    assert "S3cr3t" not in str(error.value)
-    assert isinstance(error.value, FailClosedError)
-
-
-def test_buggy_pseudonymizer_fails_closed_even_by_default() -> None:
+def test_buggy_pseudonymizer_fails_closed_even_with_redact() -> None:
     def leaky(value: str, ctx: Context, counter: int) -> str:
         return f"{value} copy"  # a bug that keeps the original inside the pseudonym
 
-    p = pipeline()
+    p = Pipeline([RULES], Session(KeyedDerivation(KEY)), redact=True)
     p._pseudonymizer._generators[E.ORGANIZATION] = leaky
     # The residue sits inside a pseudonym: redacting it would corrupt the output, so it raises.
     with pytest.raises(LeakDetectedError) as error:
@@ -168,8 +168,10 @@ def test_full_redetection_is_off_by_default() -> None:
     assert "Orion" in p.mask(CONTEXT_DOC).text  # fast check only: this miss goes through
 
 
-def test_paranoid_mode_redacts_what_the_detectors_find_in_the_output() -> None:
-    p = Pipeline([ContextDependent(), RULES], Session(KeyedDerivation(KEY)), paranoid=True)
+def test_paranoid_and_redact_redact_what_the_detectors_find_in_the_output() -> None:
+    p = Pipeline(
+        [ContextDependent(), RULES], Session(KeyedDerivation(KEY)), paranoid=True, redact=True
+    )
     result = p.mask(CONTEXT_DOC)
     assert "Codename [REDACTED]" in result.text
     assert [(f.reason, f.entity_type) for f in result.redactions] == [
@@ -177,8 +179,8 @@ def test_paranoid_mode_redacts_what_the_detectors_find_in_the_output() -> None:
     ]
 
 
-def test_strict_mode_fails_closed_on_what_the_detectors_find_in_the_output() -> None:
-    p = Pipeline([ContextDependent(), RULES], Session(KeyedDerivation(KEY)), strict=True)
+def test_paranoid_fails_closed_on_what_the_detectors_find_in_the_output() -> None:
+    p = Pipeline([ContextDependent(), RULES], Session(KeyedDerivation(KEY)), paranoid=True)
     with pytest.raises(LeakDetectedError) as error:
         p.mask(CONTEXT_DOC)
     [finding] = error.value.findings

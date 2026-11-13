@@ -61,17 +61,18 @@ Readings:
 Synthetic corpus extended with 4 templates (Git remotes and registry, AWS SSO config,
 certificate, source header): 280 documents.
 
-| Corpus | Recall | Precision | Leak after detection | Redacted by re-scan | Leak in final output |
+| Corpus | Recall | Precision | Leak after detection | Blocked (default) | Leak in final output |
 |---|---|---|---|---|---|
 | synthetic | 95.9% | 100.0% | 14.3% | 0 | 40 docs |
-| synthetic, no propagation | 88.1% | 100.0% | 42.9% | 62 docs | 80 docs |
+| synthetic, no propagation | 88.1% | 100.0% | 42.9% | 62 docs | 58 docs |
+| synthetic, no propagation, `--redact` | 88.1% | 100.0% | 42.9% | 0 (62 redacted) | 80 docs |
 | dev | 86.4% | 90.0% | 25.0% | 0 | 2 docs |
 
 Readings:
 
-- The re-scan safety net now redacts instead of blocking (ADR 0014). Without propagation it
-  halves the documents that leak in the final output (120 → 80), at the price of `[REDACTED]`
-  markers; with propagation it has nothing left to catch on these corpora.
+- The re-scan fails closed by default; `--redact` is an explicit option (ADR 0014). Without
+  propagation, the default blocks 62 documents; `--redact` sends them with `[REDACTED]` holes.
+  With propagation, the re-scan has nothing left to catch on these corpora.
 - What still leaks, on every corpus: **names of people and organizations in prose** (incident
   notes, chat threads), and an IAM role name behind a plain `name =` attribute. The re-scan
   cannot catch them: it only knows values detected somewhere. This is the case for phase 2

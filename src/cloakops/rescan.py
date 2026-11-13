@@ -2,11 +2,12 @@
 
 1. **Always** (fast, string search): does any original value that was replaced still appear in
    the output?
-2. **Opt-in** (paranoid / strict, runs every detector again): do the detectors find something
+2. **Opt-in** (`--paranoid`, runs every detector again): do the detectors find something
    that is neither a known pseudonym nor part of one?
 
-What happens to findings is the pipeline's decision: by default they are redacted
-(`[REDACTED]`) with a warning; in strict mode they raise `LeakDetectedError` (fail closed).
+What happens to findings is the pipeline's decision: by default they raise
+`LeakDetectedError` (fail closed); with `--redact` they are replaced by `[REDACTED]` with a
+warning.
 Findings carry positions and types, never values. Values that are not distinctive (short,
 generic, common words: see `propagate.is_distinctive`) are not checked by (1): they cannot be
 told apart from ordinary text (documented residual risk).
