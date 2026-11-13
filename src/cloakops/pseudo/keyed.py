@@ -30,6 +30,11 @@ class KeyedDerivation:
     def __repr__(self) -> str:
         return "KeyedDerivation(<key hidden>)"
 
+    def export_key(self) -> bytes:
+        """The raw key, for the local session store only. Whoever holds it can re-derive every
+        pseudonym of the session: treat it like the mapping table itself."""
+        return self._key
+
     def digest(self, domain: str, value: str, counter: int = 0, block: int = 0) -> bytes:
         message = b"\x00".join(
             (

@@ -11,6 +11,9 @@ authors = [
 requires-python = ">=3.12.16,<3.13"
 dependencies = []
 
+[project.scripts]
+cloakops = "cloakops.cli:main"
+
 [build-system]
 requires = ["hatchling==1.33.0"]
 build-backend = "hatchling.build"
@@ -40,6 +43,7 @@ select = ["E", "F", "W", "I", "B", "UP", "S", "SIM", "RUF"]
 "src/cloakops/benchmark/templates.py" = ["E501"]
 "src/cloakops/benchmark/fakes.py" = ["E501"]
 "src/cloakops/detect/rules/organization.py" = ["E501"]  # word lists and regexes
+"src/cloakops/cli.py" = ["E501"]  # argparse help strings read better on one line
 
 [tool.mypy]
 strict = true

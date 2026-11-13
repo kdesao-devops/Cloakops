@@ -1,6 +1,6 @@
 # Architecture
 
-Status: phase 0. Describes the target for phase 1; later phases extend it.
+Status: end of phase 1. Later phases extend it.
 
 ## Pipeline
 
@@ -26,11 +26,13 @@ input text
 pseudonymized text ──► LLM ──► answer ──► [re-inject] ──► answer with real values
 ```
 
-## Package layout (phase 1 target)
+## Package layout
 
 ```
 src/cloakops/
-├── cli.py            mask / unmask / scan / bench
+├── cli.py            mask / unmask / scan / session / dict (ADR 0016)
+├── store.py          local sessions (0600, TTL), seed dictionary, config.toml
+├── preamble.py       instruction for the model (--preamble)
 ├── model.py          Span, EntityType, Category (spans hold offsets, never values)
 ├── resolve.py        overlap resolution (ADR 0006)
 ├── errors.py         FailClosedError: the one error type that means "send nothing"
@@ -82,4 +84,4 @@ pseudonymization (0003), recall-first benchmark (0004), text-level detection (00
 resolution (0006), sensitive-values dictionary (0007), rules
 layer conventions (0008), masking of non-secret identifiers (0009),
 coherent and syntax-safe pseudonyms (0010), re-injection (0011), propagation and output re-scan (0012),
-benchmark implementation (0013), re-scan modes (0014), organization signals (0015).
+benchmark implementation (0013), re-scan modes (0014), organization signals (0015), CLI and local store (0016).

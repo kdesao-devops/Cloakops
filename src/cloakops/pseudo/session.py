@@ -60,6 +60,27 @@ class Session:
         if kept:
             self._kept.add(original)
 
+    def export_state(self) -> dict[str, object]:
+        """Everything needed to resume the session in another process (holds real values)."""
+        return {
+            "key": self.derivation.export_key().hex(),
+            "mappings": [
+                [namespace, original, pseudonym, original in self._kept and pseudonym == original]
+                for (namespace, original), pseudonym in self._forward.items()
+            ],
+        }
+
+    @classmethod
+    def from_state(cls, state: Mapping[str, object]) -> Session:
+        key = state["key"]
+        mappings = state["mappings"]
+        if not isinstance(key, str) or not isinstance(mappings, list):
+            raise ValueError("invalid session state")
+        session = cls(KeyedDerivation(bytes.fromhex(key)))
+        for namespace, original, pseudonym, kept in mappings:
+            session.register((str(namespace), str(original)), str(pseudonym), kept=bool(kept))
+        return session
+
     @property
     def reverse(self) -> Mapping[str, str]:
         """pseudonym -> original, for re-injection."""

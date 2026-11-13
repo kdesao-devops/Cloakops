@@ -3,7 +3,8 @@
 > Send your Terraform plans, Kubernetes manifests and logs to a public LLM without sending your
 > secrets and infrastructure identifiers with them.
 
-**Status: early development (phase 1).** Library pipeline and benchmark in place; CLI next.
+**Status: early development (end of phase 1).** Rule-based detection, pseudonymization,
+re-injection, CLI and benchmark work; NER and local-LLM layers come in phase 2.
 See the [benchmark](docs/benchmark.md) for measured recall, including its limits.
 
 cloakops is a local pseudonymization gateway specialized for infrastructure and DevOps data.
@@ -29,6 +30,28 @@ prompt + confidential content
 
 Note on wording: this is **pseudonymization**, not anonymization. The mapping is reversible by
 design, and under GDPR pseudonymized personal data is still personal data.
+
+## Usage
+
+```bash
+uv sync
+# Mask a Terraform state, paste the result in any chat, keep the session name.
+uv run cloakops mask terraform.tfstate --session incident-42 --preamble > masked.txt
+# Restore the real values in the model's answer.
+uv run cloakops unmask answer.txt --session incident-42
+# Pipes work too (macOS clipboard):
+pbpaste | uv run cloakops mask --session incident-42 | pbcopy
+# What would be masked (types and positions, never values):
+uv run cloakops scan app.log
+# Names to always mask, and the organization's domains:
+uv run cloakops dict add "Acme Industries"
+uv run cloakops mask notes.md --session s --org-domain acme.io
+```
+
+Safety defaults: if detection fails or a value is found in clear after masking, nothing is
+written (exit code 3). `--redact` replaces such residues with `[REDACTED]` instead;
+`--paranoid` re-runs every detector on the output. Sessions live in
+`~/.local/state/cloakops` (owner-only files, 24 h TTL, not encrypted yet: phase 3).
 
 ## Roadmap
 

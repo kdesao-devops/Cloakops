@@ -47,7 +47,7 @@ Only pseudonymized text crosses the boundary.
 | T3 | Provider **breach** or insider reading stored prompts | Yes | Same |
 | T4 | **Detection miss**: a secret is not recognized and leaves in clear | Yes, the main risk | Layered detection, recall-first benchmark, post-masking re-scan, fail-closed |
 | T5 | Detection error or timeout lets raw text through | Yes | Fail-closed: no detection result, no request. Residues found by the re-scan fail closed too, or are redacted with `--redact` (ADR 0014) |
-| T6 | Mapping table stolen from disk | Partially | Phase 1: file mode 0600, never committed. Phase 3: encrypted at rest, TTL |
+| T6 | Mapping table stolen from disk | Partially | Phase 1: owner-only directory (0700) and files (0600), refused if more open, 24 h TTL, outside repositories (ADR 0016). Phase 3: encrypted at rest |
 | T7 | Audit receipts leak values | Yes | Receipts store type, position, detector, salted hash; never raw values |
 | T8 | Pseudonym is **reversible without the key** (e.g. guessable hash of a short value) | Yes | Keyed (HMAC) derivation with a per-session random key |
 | T9 | **Prompt injection** in the processed content tries to make the model reveal or misuse values | Limited | The model never sees real values, so it cannot leak them. Re-injection only restores known pseudonyms |

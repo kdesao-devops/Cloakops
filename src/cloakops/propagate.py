@@ -20,7 +20,7 @@ from __future__ import annotations
 import os
 import re
 import stat
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
 from pathlib import Path
 
 from cloakops.errors import FailClosedError
@@ -133,9 +133,37 @@ class Propagator:
         self._domains: set[str] = set()  # organization domains learned (korvane.com)
         self._prefixes: dict[str, set[str]] = {}  # first word -> distinct resource names
         self._compiled: tuple[int, re.Pattern[str] | None, re.Pattern[str] | None] | None = None
+        self.add_seed(seed)
+
+    def add_seed(self, seed: Iterable[tuple[str, EntityType]]) -> None:
         for term, entity_type in seed:
             self._add_value(term, entity_type)
             self._add_words(term, entity_type)
+
+    def export_state(self) -> dict[str, object]:
+        """Learned terms, to resume propagation in another process (holds real values)."""
+        return {
+            "words": {w: t.value for w, t in self._words.items()},
+            "values": {v: t.value for v, t in self._values.items()},
+            "domains": sorted(self._domains),
+            "prefixes": {p: sorted(names) for p, names in self._prefixes.items()},
+        }
+
+    def import_state(self, state: Mapping[str, object]) -> None:
+        words, values = state.get("words", {}), state.get("values", {})
+        domains, prefixes = state.get("domains", []), state.get("prefixes", {})
+        if not (
+            isinstance(words, dict)
+            and isinstance(values, dict)
+            and isinstance(domains, list)
+            and isinstance(prefixes, dict)
+        ):
+            raise ValueError("invalid propagation state")
+        self._words.update({str(w): EntityType(t) for w, t in words.items()})
+        self._values.update({str(v): EntityType(t) for v, t in values.items()})
+        self._domains.update(str(d) for d in domains)
+        for prefix, names in prefixes.items():
+            self._prefixes.setdefault(str(prefix), set()).update(str(n) for n in names)
 
     def __len__(self) -> int:
         return len(self._words) + len(self._values) + len(self._domains)
