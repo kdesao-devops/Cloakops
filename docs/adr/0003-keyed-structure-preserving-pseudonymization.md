@@ -1,6 +1,6 @@
 # 0003. Keyed, consistent, structure-preserving pseudonymization
 
-Date: 2026-11-13 · Status: accepted
+Date: 2026-11-13 · Status: accepted · Amended by ADR 0010 (hostnames, coherence)
 
 ## Context
 

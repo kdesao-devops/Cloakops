@@ -47,10 +47,13 @@ src/cloakops/
 │       ├── k8s.py          values of Kubernetes Secret data/stringData
 │       ├── keyvalue.py     sensitive field names across YAML/JSON/HCL/env/CLI flags
 │       └── entropy.py      high-entropy unknown secrets
-├── pseudo/
-│   ├── session.py    mapping table
-│   ├── keyed.py      HMAC derivation
-│   └── generators/   ip, arn, account_id, hostname, secret, ...
+├── pseudo/           (ADR 0003, 0010)
+│   ├── keyed.py      HMAC derivation, unbiased choice
+│   ├── session.py    mapping table (pseudonym <-> original), kept values
+│   ├── text.py       class-preserving and word-level primitives, kept generic words
+│   ├── network.py    prefix-preserving IP permutation
+│   ├── generators.py one generator per entity type; composites call the engine per component
+│   └── engine.py     Pseudonymizer: caching, collision checks, fail-closed, text replacement
 └── reinject.py       pseudonym → real value
 
 bench/
@@ -66,4 +69,5 @@ bench/
 See [docs/adr](adr/). Key ones: layered detection (0002), keyed structure-preserving
 pseudonymization (0003), recall-first benchmark (0004), text-level detection (0005), overlap
 resolution (0006), sensitive-values dictionary (0007), rules
-layer conventions (0008), masking of non-secret identifiers (0009).
+layer conventions (0008), masking of non-secret identifiers (0009),
+coherent and syntax-safe pseudonyms (0010).
