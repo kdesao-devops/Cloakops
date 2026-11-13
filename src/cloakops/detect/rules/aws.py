@@ -85,6 +85,23 @@ AWS_SECRET_ACCESS_KEY = RegexRule(
     group=1,
 )
 
+# EC2/VPC-family IDs: a type prefix, then 8 (legacy) or 17 hex chars. Not secrets, but unique,
+# stable identifiers that link a prompt to an account; masking them is nearly free because the
+# pseudonym keeps the prefix and length (ADR 0009). Longest prefixes first.
+_RESOURCE_ID_PREFIXES = (
+    "tgw-attach", "cvpn-endpoint", "eipalloc", "eipassoc", "rtbassoc", "subnet", "dopt", "eigw",
+    "fsap", "snap", "vpce", "ami", "acl", "cgw", "eni", "igw", "nat", "pcx", "sgr", "tgw", "vgw",
+    "vol", "vpc", "vpn", "key", "sir", "fs", "lt", "pl", "sg", "i", "r",
+)  # fmt: skip
+
+AWS_RESOURCE_ID = RegexRule(
+    name="aws-resource-id",
+    entity_type=EntityType.AWS_RESOURCE_ID,
+    pattern=re.compile(
+        rf"(?<![\w-])(?:{'|'.join(_RESOURCE_ID_PREFIXES)})-(?:[0-9a-f]{{17}}|[0-9a-f]{{8}})(?![\w-])"
+    ),
+)
+
 _BUCKET = r"[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]"
 
 S3_URI_BUCKET = RegexRule(
@@ -130,6 +147,7 @@ def aws_rules() -> list[Rule]:
         AWS_ACCOUNT_ID_ECR,
         AWS_ACCESS_KEY_ID,
         AWS_UNIQUE_ID,
+        AWS_RESOURCE_ID,
         AWS_SECRET_ACCESS_KEY,
         S3_URI_BUCKET,
         S3_VIRTUAL_HOST_BUCKET,

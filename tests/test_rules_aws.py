@@ -7,6 +7,7 @@ from cloakops.detect.rules.aws import (
     AWS_ACCOUNT_ID_CONTEXT,
     AWS_ACCOUNT_ID_ECR,
     AWS_RESOURCE_HOSTNAME,
+    AWS_RESOURCE_ID,
     AWS_SECRET_ACCESS_KEY,
     AWS_UNIQUE_ID,
     S3_PATH_STYLE_BUCKET,
@@ -88,3 +89,28 @@ def test_resource_hostnames_but_not_public_endpoints() -> None:
 def test_arn_wins_over_its_account_id_after_resolution() -> None:
     text = "role arn:aws:iam::123456789012:role/deploy"
     assert resolved(text) == [(E.ARN, "arn:aws:iam::123456789012:role/deploy")]
+
+
+def test_resource_ids() -> None:
+    text = (
+        'vpc_id = "vpc-0a1b2c3d4e5f67890"\n'
+        "ingress from sg-12345678 to subnet-0fedcba9876543210\n"
+        "instance i-0abcdef1234567890 attached vol-0123456789abcdef0\n"
+        "attachment tgw-attach-0123456789abcdef0\n"
+    )
+    assert raw(text, AWS_RESOURCE_ID) == sorted(
+        (E.AWS_RESOURCE_ID, v)
+        for v in [
+            "vpc-0a1b2c3d4e5f67890",
+            "sg-12345678",
+            "subnet-0fedcba9876543210",
+            "i-0abcdef1234567890",
+            "vol-0123456789abcdef0",
+            "tgw-attach-0123456789abcdef0",
+        ]
+    )
+
+
+def test_resource_id_needs_exact_length_and_known_prefix() -> None:
+    text = "sg-1234567 sg-0a1b2c3d4e5f6789 foo-0a1b2c3d4e5f67890 sg-0A1B2C3D my-sg-12345678x"
+    assert raw(text, AWS_RESOURCE_ID) == []

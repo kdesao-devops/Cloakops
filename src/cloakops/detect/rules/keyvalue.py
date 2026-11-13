@@ -54,6 +54,13 @@ _EXACT_CONFIDENCE = {
     EntityType.RESOURCE_NAME: 0.8,
 }
 
+# Identifiers without a recognizable format (often UUIDs) that tie content to an organization:
+# masked only in this explicit context (ADR 0009). Matched as a suffix: ARM_TENANT_ID, etc.
+_ORG_ID_SUFFIXES = (
+    "tenantid", "subscriptionid", "directoryid", "kmskeyid", "clientid", "applicationid",
+    "appid", "organizationid", "orgid", "workspaceid", "externalid", "billingaccountid",
+)  # fmt: skip
+
 # Values that embed credentials even though the key ends in "url".
 _URL_SECRETS = (
     "databaseurl", "dburl", "dsn", "connectionstring", "connstr", "webhook", "redisurl",
@@ -91,6 +98,9 @@ def classify_key(key: str) -> tuple[EntityType, float] | None:
     for exact_type, names in _EXACT.items():
         if norm in names:
             return exact_type, _EXACT_CONFIDENCE[exact_type]
+
+    if norm.endswith(_ORG_ID_SUFFIXES):
+        return EntityType.RESOURCE_NAME, 0.8
 
     if any(word in norm for word in _URL_SECRETS):
         return EntityType.GENERIC_SECRET, 0.9

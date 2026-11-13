@@ -34,6 +34,7 @@ class EntityType(StrEnum):
     IP_NETWORK = "ip_network"
     ARN = "arn"
     AWS_ACCOUNT_ID = "aws_account_id"
+    AWS_RESOURCE_ID = "aws_resource_id"  # vpc-..., sg-..., i-... (ADR 0009)
     HOSTNAME = "hostname"
     BUCKET_NAME = "bucket_name"
     CLUSTER_NAME = "cluster_name"
@@ -75,6 +76,7 @@ _CATEGORY: dict[EntityType, Category] = {
     EntityType.IP_NETWORK: Category.INFRASTRUCTURE,
     EntityType.ARN: Category.INFRASTRUCTURE,
     EntityType.AWS_ACCOUNT_ID: Category.INFRASTRUCTURE,
+    EntityType.AWS_RESOURCE_ID: Category.INFRASTRUCTURE,
     EntityType.HOSTNAME: Category.INFRASTRUCTURE,
     EntityType.BUCKET_NAME: Category.INFRASTRUCTURE,
     EntityType.CLUSTER_NAME: Category.INFRASTRUCTURE,

@@ -20,7 +20,7 @@ personal data.
 | Asset | Why it matters |
 |---|---|
 | A1. Credentials (API keys, tokens, JWTs, private keys, passwords) | Direct compromise if leaked |
-| A2. Infrastructure identifiers (IPs/CIDRs, account IDs, ARNs, hostnames, resource names) | Reconnaissance, targeting, inference of topology |
+| A2. Infrastructure identifiers (IPs/CIDRs, account IDs, ARNs, resource IDs, hostnames, resource names) | Reconnaissance, targeting, inference of topology |
 | A3. Personal and business data (people, emails, customer and project names) | Privacy (GDPR) and confidentiality obligations |
 | A4. The mapping table (pseudonym → real value) | Holds every real value: as sensitive as all of the above combined |
 | A5. Audit receipts | Must prove what was masked without becoming a leak themselves |
@@ -51,6 +51,7 @@ Only pseudonymized text crosses the boundary.
 | T7 | Audit receipts leak values | Yes | Receipts store type, position, detector, salted hash; never raw values |
 | T8 | Pseudonym is **reversible without the key** (e.g. guessable hash of a short value) | Yes | Keyed (HMAC) derivation with a per-session random key |
 | T9 | **Prompt injection** in the processed content tries to make the model reveal or misuse values | Limited | The model never sees real values, so it cannot leak them. Re-injection only restores known pseudonyms |
+| T10 | **Linkability**: stable unique identifiers (resource IDs, tenant IDs) tie prompts to the organization when the same ID appears elsewhere | Yes | Identifiers are masked even when not secret, with structure-preserving pseudonyms (ADR 0009) |
 
 ## 5. Explicitly out of scope
 

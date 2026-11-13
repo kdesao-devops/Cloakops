@@ -39,7 +39,7 @@ src/cloakops/
 │   ├── base.py       Detector protocol, fail-closed runner (NER/LLM layers plug in here)
 │   └── rules/        deterministic layer (ADR 0008)
 │       ├── base.py         Rule, RegexRule, RulesDetector
-│       ├── aws.py          ARNs, account IDs, access keys, buckets, resource endpoints
+│       ├── aws.py          ARNs, account/resource IDs, access keys, buckets, endpoints
 │       ├── network.py      IPv4/IPv6, CIDRs, internal hostnames, organization domains
 │       ├── secrets.py      vendor tokens, JWTs, bearer tokens, URL passwords
 │       ├── crypto_keys.py  PEM/OpenSSH/PGP private keys (complete or truncated)
@@ -66,4 +66,4 @@ bench/
 See [docs/adr](adr/). Key ones: layered detection (0002), keyed structure-preserving
 pseudonymization (0003), recall-first benchmark (0004), text-level detection (0005), overlap
 resolution (0006), sensitive-values dictionary (0007), rules
-layer conventions (0008).
+layer conventions (0008), masking of non-secret identifiers (0009).

@@ -29,6 +29,12 @@ KV = KeyValueRule()
         ("cluster_name", E.CLUSTER_NAME),
         ("password_secret_arn", E.RESOURCE_NAME),  # points to a secret, does not hold it
         ("secretName", E.RESOURCE_NAME),
+        # Organization-identifying IDs (often UUIDs), masked only in this explicit context.
+        ("tenant_id", E.RESOURCE_NAME),
+        ("ARM_SUBSCRIPTION_ID", E.RESOURCE_NAME),
+        ("kms_key_id", E.RESOURCE_NAME),
+        ("client_id", E.RESOURCE_NAME),
+        ("ExternalId", E.RESOURCE_NAME),
     ],
 )
 def test_sensitive_keys(key: str, expected: E) -> None:
@@ -39,7 +45,16 @@ def test_sensitive_keys(key: str, expected: E) -> None:
 
 @pytest.mark.parametrize(
     "key",
-    ["name", "image", "PWD", "client_id", "password_length", "token_url", "public_key", "author_x"],
+    [
+        "name",
+        "image",
+        "PWD",
+        "request_id",
+        "password_length",
+        "token_url",
+        "public_key",
+        "author_x",
+    ],
 )
 def test_non_sensitive_keys(key: str) -> None:
     assert classify_key(key) is None
@@ -101,3 +116,9 @@ def test_kubernetes_env_name_value_pairs() -> None:
 def test_ecs_json_name_value_pairs() -> None:
     text = '{"name": "API_TOKEN", "value": "tok-ecs-1"}, {"name": "PORT", "value": "80"}'
     assert values(text, EnvPairRule()) == ["tok-ecs-1"]
+
+
+def test_uuid_masked_in_context_only() -> None:
+    uuid = "3f2b8c1e-9a4d-4e7b-b1c2-5d6e7f8a9b0c"
+    text = f'tenant_id = "{uuid}"\nrequest_id = "{uuid}"\n'
+    assert raw(text, KV) == [(E.RESOURCE_NAME, uuid)]
