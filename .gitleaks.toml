@@ -1,0 +1,13 @@
+# Repository-level gitleaks config (used by the pre-commit hook and CI).
+# The benchmark corpus and its generator intentionally contain FAKE secrets that look real:
+# that is the whole point of a detection benchmark. Everything else is scanned normally.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Planted fake secrets used by the detection benchmark"
+paths = [
+  '''^bench/corpus/''',
+  '''^bench/generate\.py$''',
+  '''^tests/fixtures/''',
+]
