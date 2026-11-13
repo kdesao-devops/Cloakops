@@ -21,6 +21,7 @@ from cloakops.model import EntityType, Span
 
 _CANDIDATE = re.compile(r"(?<![A-Za-z0-9+/=_.-])[A-Za-z0-9+/_-]{20,}={0,2}(?![A-Za-z0-9+/=_.-])")
 _HEX = re.compile(r"[0-9a-fA-F]{32,}")
+_WORD_RUN = re.compile(r"[a-z]{9,}")
 _DIGEST_PREFIX = re.compile(r"(?:sha1|sha256|sha384|sha512|md5):$", re.I)
 
 MIN_LENGTH = 20
@@ -55,6 +56,12 @@ def looks_random(token: str) -> bool:
         and any(c.islower() for c in core)
         and any(c.isdigit() for c in core)
     ):
+        return False
+    # Words inside: in random base64 a lowercase letter has probability ~0.4, so a run of 9 has
+    # 0.4^9 ~ 2.6e-4 per position: 0.59% of random 40-char secrets measured (the recall cost). Names
+    # made of words (sha256WithRSAEncryption) usually contain one. A run of 7 was tried first:
+    # it would have dropped ~5% of real 40-char secrets.
+    if _WORD_RUN.search(core):
         return False
     return normalized_entropy(core, 64) >= BASE64_THRESHOLD
 

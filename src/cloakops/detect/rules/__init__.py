@@ -12,6 +12,7 @@ from cloakops.detect.rules.identity import identity_rules
 from cloakops.detect.rules.k8s import k8s_rules
 from cloakops.detect.rules.keyvalue import keyvalue_rules
 from cloakops.detect.rules.network import DEFAULT_INTERNAL_SUFFIXES, network_rules
+from cloakops.detect.rules.organization import organization_rules
 from cloakops.detect.rules.secrets import secret_rules
 
 __all__ = [
@@ -34,6 +35,7 @@ def default_rules(
         *aws_rules(),
         *network_rules(internal_suffixes, organization_domains),
         *identity_rules(),
+        *organization_rules(),
         *k8s_rules(),
         *keyvalue_rules(),
         *entropy_rules(),

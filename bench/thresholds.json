@@ -1,6 +1,6 @@
 {
   "synthetic": {
-    "_overall": 0.9355,
+    "_overall": 0.9591,
     "api_token": 1.0,
     "aws_access_key_id": 1.0,
     "aws_account_id": 1.0,
@@ -14,14 +14,14 @@
     "ip_address": 1.0,
     "ip_network": 1.0,
     "jwt": 1.0,
-    "organization": 0.6667,
+    "organization": 0.9864,
     "password": 1.0,
     "person": 0.0,
     "private_key": 1.0,
-    "resource_name": 0.75
+    "resource_name": 0.8
   },
   "dev": {
-    "_overall": 0.8475,
+    "_overall": 0.8644,
     "api_token": 1.0,
     "aws_account_id": 1.0,
     "aws_resource_id": 1.0,
@@ -31,7 +31,7 @@
     "hostname": 0.875,
     "ip_address": 1.0,
     "ip_network": 1.0,
-    "organization": 0.3333,
+    "organization": 0.6667,
     "password": 1.0,
     "person": 0.2857,
     "resource_name": 1.0

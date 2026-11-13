@@ -56,6 +56,29 @@ Readings:
 - Remaining dev false positive: a database username (`payments`) masked and propagated to the
   chart name and image path. Debatable: a username is half a credential.
 
+### After the re-scan amendments and the organization signals (ADR 0014, ADR 0015)
+
+Synthetic corpus extended with 4 templates (Git remotes and registry, AWS SSO config,
+certificate, source header): 280 documents.
+
+| Corpus | Recall | Precision | Leak after detection | Redacted by re-scan | Leak in final output |
+|---|---|---|---|---|---|
+| synthetic | 95.9% | 100.0% | 14.3% | 0 | 40 docs |
+| synthetic, no propagation | 88.1% | 100.0% | 42.9% | 62 docs | 80 docs |
+| dev | 86.4% | 90.0% | 25.0% | 0 | 2 docs |
+
+Readings:
+
+- The re-scan safety net now redacts instead of blocking (ADR 0014). Without propagation it
+  halves the documents that leak in the final output (120 → 80), at the price of `[REDACTED]`
+  markers; with propagation it has nothing left to catch on these corpora.
+- What still leaks, on every corpus: **names of people and organizations in prose** (incident
+  notes, chat threads), and an IAM role name behind a plain `name =` attribute. The re-scan
+  cannot catch them: it only knows values detected somewhere. This is the case for phase 2
+  (NER, local LLM).
+- The entropy rule now rejects tokens with 9+ lowercase letters in a row (identifiers made of
+  words such as `sha256WithRSAEncryption`); measured cost: 0.59% of random 40-character secrets.
+
 ## Known limits of this benchmark
 
 - The synthetic corpus and the rules share an author; the synthetic score is not evidence.

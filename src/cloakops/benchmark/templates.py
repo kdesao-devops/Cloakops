@@ -236,4 +236,65 @@ Root cause: security group {{sg_id}} dropped traffic from {{cidr}} after a chang
 Follow-up: re-run the plan in account {{account}} and rotate the bot token.
 """,
     ),
+    Template(
+        "git-and-registry",
+        "raw",
+        """$ git remote -v
+origin\tgit@github.com:{{org_slug}}/platform-infra.git (fetch)
+origin\tgit@github.com:{{org_slug}}/platform-infra.git (push)
+$ cat backend.tf
+terraform {
+  cloud {
+    organization = "{{org_slug}}"
+    workspaces { name = "prod" }
+  }
+}
+$ docker pull ghcr.io/{{org_slug}}/api:2.4.0
+Error response from daemon: unauthorized: ask the {{org_slug}} platform team for access
+""",
+    ),
+    Template(
+        "aws-config",
+        "raw",
+        """[profile prod-admin]
+sso_start_url = https://{{org_slug}}.awsapps.com/start
+sso_region = eu-west-1
+sso_account_id = {{account}}
+sso_role_name = AdministratorAccess
+region = eu-west-1
+output = json
+# Console sign-in: https://{{signin_alias}}.signin.aws.amazon.com/console
+""",
+    ),
+    Template(
+        "certificate",
+        "raw",
+        """Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            04:a1:3c:9e:52:7b:0f:11:d6:88:2e:4a:90:5c:13:7f:aa:21
+        Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=US, O=Let's Encrypt, CN=R11
+        Validity
+            Not Before: Nov  1 00:00:00 2026 GMT
+            Not After : Jan 30 23:59:59 2027 GMT
+        Subject: CN={{cert_cn}}
+        X509v3 extensions:
+            X509v3 Subject Alternative Name:
+                DNS:{{api_host}}, DNS:{{cert_cn}}
+""",
+    ),
+    Template(
+        "source-header",
+        "raw",
+        """# Copyright (c) 2026 {{org}}. All rights reserved.
+# Internal use only. Questions: {{email}}
+\"\"\"Billing worker for the {{org_word}} platform.\"\"\"
+
+import os
+
+API_URL = os.environ.get("API_URL", "https://{{api_host}}/v1")
+""",
+    ),
 )

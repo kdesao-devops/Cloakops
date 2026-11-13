@@ -39,6 +39,7 @@ select = ["E", "F", "W", "I", "B", "UP", "S", "SIM", "RUF"]
 # Benchmark templates and fakes are data: long realistic lines are the point.
 "src/cloakops/benchmark/templates.py" = ["E501"]
 "src/cloakops/benchmark/fakes.py" = ["E501"]
+"src/cloakops/detect/rules/organization.py" = ["E501"]  # word lists and regexes
 
 [tool.mypy]
 strict = true

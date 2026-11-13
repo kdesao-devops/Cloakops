@@ -25,9 +25,14 @@ from pathlib import Path
 
 from cloakops.errors import FailClosedError
 from cloakops.model import EntityType, Span
+from cloakops.pseudo.generators import PUBLIC_MAIL_DOMAINS
 from cloakops.pseudo.text import KEEP_WORDS, has_content, is_generic
 
 PROPAGATION_DETECTOR = "propagation"
+SHARED_PREFIX_MIN_VALUES = 3  # distinct resource names sharing a first word (ADR 0015)
+_SECOND_LEVEL_SUFFIXES = frozenset(
+    {"co.uk", "org.uk", "com.au", "co.jp", "com.br", "co.nz", "co.za", "com.cn", "co.in", "com.mx"}
+)
 MIN_TERM_LENGTH = 4
 MIN_SOURCE_CONFIDENCE = 0.8
 TERM_CONFIDENCE = 0.9
@@ -53,6 +58,22 @@ _COMMON_WORDS = """
 STOP_WORDS: frozenset[str] = KEEP_WORDS | frozenset(_COMMON_WORDS)
 
 _WORD = re.compile(r"[^\W_]+")
+_PREFIX_SOURCES = frozenset(
+    {EntityType.BUCKET_NAME, EntityType.CLUSTER_NAME, EntityType.RESOURCE_NAME, EntityType.ARN}
+)
+
+
+def registered_domain(host: str) -> str:
+    """korvane.com for pay.eu.korvane.com; acme.co.uk for www.acme.co.uk (common cases only)."""
+    labels = host.lower().strip(".").removeprefix("*.").split(".")
+    keep = 3 if ".".join(labels[-2:]) in _SECOND_LEVEL_SUFFIXES else 2
+    return ".".join(labels[-keep:])
+
+
+def _resource_name(entity_type: EntityType, value: str) -> str:
+    if entity_type is EntityType.ARN:
+        return re.split(r"[/:]", value)[-1]
+    return value
 
 
 def is_distinctive(value: str, min_length: int = MIN_TERM_LENGTH) -> bool:
@@ -109,13 +130,15 @@ class Propagator:
         self._min_length = min_length
         self._words: dict[str, EntityType] = {}  # lowercase word -> type
         self._values: dict[str, EntityType] = {}  # exact value -> type
+        self._domains: set[str] = set()  # organization domains learned (korvane.com)
+        self._prefixes: dict[str, set[str]] = {}  # first word -> distinct resource names
         self._compiled: tuple[int, re.Pattern[str] | None, re.Pattern[str] | None] | None = None
         for term, entity_type in seed:
             self._add_value(term, entity_type)
             self._add_words(term, entity_type)
 
     def __len__(self) -> int:
-        return len(self._words) + len(self._values)
+        return len(self._words) + len(self._values) + len(self._domains)
 
     def _eligible(self, value: str) -> bool:
         return is_distinctive(value, self._min_length)
@@ -130,6 +153,23 @@ class Propagator:
             if len(lower) >= self._min_length and lower not in STOP_WORDS and not word.isdigit():
                 self._words.setdefault(lower, entity_type)
 
+    def _add_domain(self, host: str) -> None:
+        domain = registered_domain(host)
+        if domain in PUBLIC_MAIL_DOMAINS or "." not in domain or is_generic(domain.split(".")[0]):
+            return
+        self._domains.add(domain)
+        self._add_words(domain.split(".")[0], EntityType.ORGANIZATION)
+
+    def _count_prefix(self, entity_type: EntityType, value: str) -> None:
+        name = _resource_name(entity_type, value)
+        first = re.split(r"[-_./:]", name, maxsplit=1)[0].lower()
+        if len(first) < self._min_length or first in STOP_WORDS or first.isdigit():
+            return
+        names = self._prefixes.setdefault(first, set())
+        names.add(name.lower())
+        if len(names) >= SHARED_PREFIX_MIN_VALUES:
+            self._words.setdefault(first, EntityType.ORGANIZATION)
+
     def learn(self, text: str, spans: Iterable[Span]) -> None:
         for span in spans:
             if span.merged:
@@ -138,6 +178,24 @@ class Propagator:
             self._add_value(value, span.entity_type)
             if span.entity_type in NAME_TYPES and span.confidence >= MIN_SOURCE_CONFIDENCE:
                 self._add_words(value, span.entity_type)
+            # Signal 1: a corporate email domain (or a certificate CN) is the organization's.
+            if span.entity_type is EntityType.EMAIL and "@" in value:
+                self._add_domain(value.rsplit("@", 1)[1])
+            if span.detector.startswith("rules:cert-subject-cn"):
+                self._add_domain(value)
+            # Signal 2: a first word shared by several resource names (korvane-logs,
+            # korvane-prod-eks, korvane-etl) is the organization's or the project's name.
+            if span.entity_type in _PREFIX_SOURCES:
+                self._count_prefix(span.entity_type, value)
+
+    def _domain_pattern(self) -> re.Pattern[str] | None:
+        if not self._domains:
+            return None
+        alternation = "|".join(re.escape(d) for d in sorted(self._domains, key=len, reverse=True))
+        return re.compile(
+            rf"(?<![\w.-])(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)*(?:{alternation})(?![\w-]|\.[a-z0-9])",
+            re.IGNORECASE,
+        )
 
     def _patterns(self) -> tuple[re.Pattern[str] | None, re.Pattern[str] | None]:
         version = len(self)
@@ -161,6 +219,18 @@ class Propagator:
                 entity_type = self._values[m.group()]
                 spans.append(
                     Span(m.start(), m.end(), entity_type, PROPAGATION_DETECTOR, TERM_CONFIDENCE)
+                )
+        domain_pattern = self._domain_pattern()
+        if domain_pattern is not None:
+            for m in domain_pattern.finditer(text):
+                spans.append(
+                    Span(
+                        m.start(),
+                        m.end(),
+                        EntityType.HOSTNAME,
+                        PROPAGATION_DETECTOR,
+                        TERM_CONFIDENCE,
+                    )
                 )
         if word_pattern is not None:
             for m in word_pattern.finditer(text):

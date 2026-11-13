@@ -47,6 +47,7 @@ def test_random_strings_look_random_words_do_not() -> None:
     assert not looks_random("AbstractSingletonProxyFactoryBean2")
     assert not looks_random("/usr/local/lib/python3/site-packages")
     assert not looks_random("my-very-long-kubernetes-deployment-name")
+    assert not looks_random("sha256WithRSAEncryption")
 
 
 def test_entropy_rule_skips_content_digests() -> None:

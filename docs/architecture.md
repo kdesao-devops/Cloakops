@@ -36,7 +36,7 @@ src/cloakops/
 ├── errors.py         FailClosedError: the one error type that means "send nothing"
 ├── pipeline.py       detect → resolve → propagate → pseudonymize → re-scan (ADR 0012)
 ├── policy.py         enabled entity types, risk level (YAML)
-├── propagate.py      exact values + name words + seed dictionary (ADR 0007, 0012)
+├── propagate.py      exact values, name words, learned domains and prefixes, seed (0007, 0012, 0015)
 ├── rescan.py         output re-scan and redaction (ADR 0012, 0014)
 ├── detect/
 │   ├── base.py       Detector protocol, fail-closed runner (NER/LLM layers plug in here)
@@ -46,7 +46,8 @@ src/cloakops/
 │       ├── network.py      IPv4/IPv6, CIDRs, internal hostnames, organization domains
 │       ├── secrets.py      vendor tokens, JWTs, bearer tokens, URL passwords
 │       ├── crypto_keys.py  PEM/OpenSSH/PGP private keys (complete or truncated)
-│       ├── identity.py     emails
+│       ├── identity.py     emails, ssh_config users
+│       ├── organization.py tool URLs, AWS portals, cert subjects, legal entities, copyright (ADR 0015)
 │       ├── k8s.py          values of Kubernetes Secret data/stringData
 │       ├── keyvalue.py     sensitive field names across YAML/JSON/HCL/env/CLI flags
 │       └── entropy.py      high-entropy unknown secrets
@@ -81,4 +82,4 @@ pseudonymization (0003), recall-first benchmark (0004), text-level detection (00
 resolution (0006), sensitive-values dictionary (0007), rules
 layer conventions (0008), masking of non-secret identifiers (0009),
 coherent and syntax-safe pseudonyms (0010), re-injection (0011), propagation and output re-scan (0012),
-benchmark implementation (0013), re-scan modes (0014).
+benchmark implementation (0013), re-scan modes (0014), organization signals (0015).
