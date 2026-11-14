@@ -80,6 +80,54 @@ Readings:
 - The entropy rule now rejects tokens with 9+ lowercase letters in a row (identifiers made of
   words such as `sha256WithRSAEncryption`); measured cost: 0.59% of random 40-character secrets.
 
+### 2026-11-14: holdout v2 (first real-world data, before any fix)
+
+Two real Terraform states provided by the project owner (Keycloak lab: realm, OIDC client,
+groups, users). They are consecutive states of the same stack (serial 43 and 48), so they count
+as one document twice. Annotated **before** running the tool on them, following the policy of
+the ADRs: the OIDC client secret, two initial passwords (`"value": "temp"`), two usernames and
+their reuse in Terraform resource addresses (11 values per file). Not annotated: Keycloak object
+UUIDs, generic names (`lab`, `argocd`, `developers`), `argocd.localtest.me` (public, resolves to
+127.0.0.1), the `private` fields (base64 of `null` and of `{"schema_version":"1"}`).
+
+| | Recall | Precision | Documents with a leak |
+|---|---|---|---|
+| with propagation | 54.5% | 15.8% | 2 / 2 |
+| without propagation | 27.3% | 100% (2 documents blocked by the re-scan) | 2 / 2 |
+
+What it showed:
+
+- **Precision collapses on real data, and propagation amplifies false positives exactly as it
+  amplifies true positives.** One wrong detection becomes dozens of masked occurrences.
+- Key-name heuristics misfire on Keycloak attribute names: `access_token_lifespan: "5m0s"`
+  (token), `discoverable_credential: "required"` (credential), `reset_credentials_flow`,
+  `access_code_lifespan_login` (the `*login` person suffix added after holdout v1 overreaches).
+- Exact-value propagation rewrites **JSON keys**: the value `required` was propagated into
+  `backchannel_logout_session_required`, `consent_required`, `ssl_required`.
+- `client_id` (masked by ADR 0009 as an organization-identifying ID) catches Keycloak client
+  names (`argocd`) and propagates them into URLs and scope lists.
+- The entropy rule flags base64 of JSON (`eyJzY2hlbWFfdmVyc2lvbiI6IjEifQ==`).
+- Misses: passwords whose key is a generic `value` inside `initial_password`; a 3-letter
+  username (`bob`) is too short to be propagated, so its reuse in resource addresses leaks.
+
+**Annotation revised by the project owner** after reading the results (ground truth, not tool
+tuning): the backup state was deleted as a duplicate (one document left); the OIDC `client_id`
+(`argocd`, a lab name but still the client's identity) and its UUID are sensitive, wherever they
+appear; base64 content (`private`) is to be masked too, since base64 is trivially decoded. With
+that annotation and still no rule change: **recall 72.2%, precision 35.1%**, 1 / 1 document
+leaks. The owner also ruled that `required` (and similar enum values) can never be sensitive,
+and that durations such as `5m0s` must be excluded. The document then moved to `dev`.
+
+After the fixes (enumerated settings and durations are never values to mask; keys about a
+credential's lifecycle such as `*_lifespan*`, `*_timeout`, `*_flow`, `*_reuse` are not
+credentials): the Keycloak document reaches **recall 72.2%, precision 100%** (from 35.1%).
+Still missed, accepted by the owner as lab test values: two `initial_password` values under a
+generic `value` key, and a 3-letter username reused in resource addresses.
+
+The dev corpus now has 9 documents (83.1% recall, 92.1% precision); the 8 previous ones are
+unchanged (86.4% / 90.0%), so the ratchet was re-baselined for the new corpus, not lowered for
+a regression. The holdout is empty again.
+
 ## Known limits of this benchmark
 
 - The synthetic corpus and the rules share an author; the synthetic score is not evidence.

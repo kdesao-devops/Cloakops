@@ -140,3 +140,29 @@ def test_cli_value_starting_with_a_dash_after_equals() -> None:
     # Regression (code review): "--password=-x..." was skipped as if "-x" were another flag.
     assert values("mysql --password=-x9Kq!2pLm -h db\n", KV) == ["-x9Kq!2pLm"]
     assert values("tool --password -h db\n", KV) == []  # after a space, "-h" is the next flag
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        # Real Keycloak state (holdout v2): durations, settings and enum values are not secrets.
+        'access_token_lifespan = "5m0s"\n',
+        '"access_code_lifespan_login": "30m0s",\n',
+        '"client_session_idle_timeout": "720h0m0s",\n',
+        '"refresh_token_max_reuse": 0,\n',
+        '"reset_credentials_flow": "reset credentials",\n',
+        '"discoverable_credential": "required",\n',
+        '"attestation_credential": "not specified",\n',
+        "token_ttl: PT15M\n",
+    ],
+)
+def test_lifecycle_settings_of_credentials_are_not_secrets(text: str) -> None:
+    assert values(text, KV) == []
+
+
+def test_real_secrets_next_to_lifecycle_settings_are_still_found() -> None:
+    text = (
+        '"access_token_lifespan": "5m0s",\n'
+        '"client_secret": "jeHnEVqYYmzlOswArHSG858jfSQr",\n'  # gitleaks:allow
+    )
+    assert values(text, KV) == ["jeHnEVqYYmzlOswArHSG858jfSQr"]  # gitleaks:allow

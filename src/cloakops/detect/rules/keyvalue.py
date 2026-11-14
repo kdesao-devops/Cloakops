@@ -79,8 +79,12 @@ _SECRET_EXACT = frozenset({"auth", "pass", "pw", "pin"})
 _METADATA_SUFFIXES = (
     "length", "type", "enabled", "required", "policy", "rotation", "ttl", "version", "expiry",
     "expiration", "expires", "count", "url", "uri", "endpoint", "host", "port", "algorithm",
-    "format", "header", "mode", "minlength", "maxlength",
+    "format", "header", "mode", "minlength", "maxlength", "reuse", "flow", "binding", "theme",
 )  # fmt: skip
+# Keys ABOUT a credential's lifecycle, wherever the word sits in the key: their values are
+# durations or settings, never the credential (access_token_lifespan, access_code_lifespan_login,
+# client_session_idle_timeout). Found on a real Keycloak state (holdout v2).
+_METADATA_WORDS = ("lifespan", "lifetime", "timeout", "duration", "interval", "period", "idle")
 # Keys that point to a credential (a name, an ARN, a path): masked, but as an identifier.
 _REFERENCE_SUFFIXES = ("name", "ref", "arn", "id", "path", "file", "location")
 
@@ -106,6 +110,9 @@ def classify_key(key: str) -> tuple[EntityType, float] | None:
 
     if norm.endswith(_ORG_ID_SUFFIXES):
         return EntityType.RESOURCE_NAME, 0.8
+
+    if any(word in norm for word in _METADATA_WORDS):
+        return None
 
     if any(word in norm for word in _URL_SECRETS):
         return EntityType.GENERIC_SECRET, 0.9
@@ -145,6 +152,9 @@ _PLACEHOLDERS = frozenset(
         "redacted",
         "<redacted>", "[redacted]", "<sensitive>", "(sensitive)", "(sensitive value)",
         "(known after apply)", "-", "|", ">", "{", "[", "{}", "[]",
+        # Enumerated settings, never secrets (owner's decision, holdout v2): a password literally
+        # equal to "required" is too unlikely to justify masking every "required" setting.
+        "required", "optional", "not specified", "unspecified", "not required",
     }
 )  # fmt: skip
 
@@ -155,9 +165,21 @@ _REFERENCE_VALUE = re.compile(
 )
 
 
+# Durations: Go/Terraform style (5m0s, 12h0m0s, 720h0m0s, 1.5s, 300ms) and ISO 8601 (PT5M, P1D).
+_DURATION = re.compile(
+    r"(?:[0-9]+(?:\.[0-9]+)?(?:ns|us|µs|ms|s|m|h|d))+|P(?:[0-9]+[YMWD])*(?:T(?:[0-9]+[HMS])+)?",
+    re.IGNORECASE,
+)
+
+
 def is_placeholder(value: str) -> bool:
     v = value.strip()
-    return v.lower() in _PLACEHOLDERS or set(v) <= {"*"} or bool(_REFERENCE_VALUE.match(v))
+    return (
+        v.lower() in _PLACEHOLDERS
+        or set(v) <= {"*"}
+        or bool(_REFERENCE_VALUE.match(v))
+        or (v != "P" and bool(_DURATION.fullmatch(v)))
+    )
 
 
 # --- Value reading -------------------------------------------------------------------------

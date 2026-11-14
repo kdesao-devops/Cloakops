@@ -3031,15 +3031,15 @@
     "false_positives": []
   },
   "dev": {
-    "documents": 8,
-    "leaked_documents": 2,
+    "documents": 9,
+    "leaked_documents": 3,
     "blocked_documents": 0,
     "redacted_documents": 0,
-    "output_leaked_documents": 2,
+    "output_leaked_documents": 3,
     "merged_spans": 0,
-    "recall": 0.8644,
-    "precision": 0.9,
-    "f2": 0.8713,
+    "recall": 0.8312,
+    "precision": 0.9206,
+    "f2": 0.8476,
     "per_type": {
       "api_token": {
         "planted": 3,
@@ -3084,10 +3084,10 @@
         "precision": 1.0
       },
       "generic_secret": {
-        "planted": 1,
-        "caught": 1,
+        "planted": 3,
+        "caught": 3,
         "recall": 1.0,
-        "masked": 3,
+        "masked": 5,
         "precision": 1.0
       },
       "hostname": {
@@ -3119,30 +3119,30 @@
         "precision": 0.6667
       },
       "password": {
-        "planted": 5,
+        "planted": 7,
         "caught": 5,
-        "recall": 1.0,
+        "recall": 0.7143,
         "masked": 3,
         "precision": 1.0
       },
       "person": {
-        "planted": 7,
-        "caught": 2,
-        "recall": 0.2857,
-        "masked": 6,
-        "precision": 0.3333
+        "planted": 15,
+        "caught": 7,
+        "recall": 0.4667,
+        "masked": 11,
+        "precision": 0.6364
       },
       "resource_name": {
-        "planted": 6,
-        "caught": 6,
+        "planted": 12,
+        "caught": 12,
         "recall": 1.0,
-        "masked": 2,
+        "masked": 8,
         "precision": 1.0
       }
     },
     "caught_by_layer": {
-      "propagation": 4,
-      "rules": 47
+      "propagation": 15,
+      "rules": 49
     },
     "misses": [
       {
@@ -3150,6 +3150,36 @@
         "type": "hostname",
         "start": 188,
         "end": 203
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "password",
+        "start": 13653,
+        "end": 13657
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "person",
+        "start": 15044,
+        "end": 15047
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "password",
+        "start": 15600,
+        "end": 15604
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "person",
+        "start": 17836,
+        "end": 17839
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "person",
+        "start": 18543,
+        "end": 18546
       },
       {
         "document": "slack-incident",
@@ -3228,15 +3258,15 @@
     ]
   },
   "dev (no propagation)": {
-    "documents": 8,
-    "leaked_documents": 2,
-    "blocked_documents": 1,
+    "documents": 9,
+    "leaked_documents": 3,
+    "blocked_documents": 2,
     "redacted_documents": 0,
     "output_leaked_documents": 1,
     "merged_spans": 0,
-    "recall": 0.8644,
+    "recall": 0.7403,
     "precision": 1.0,
-    "f2": 0.8885,
+    "f2": 0.7808,
     "per_type": {
       "api_token": {
         "planted": 3,
@@ -3281,8 +3311,8 @@
         "precision": 1.0
       },
       "generic_secret": {
-        "planted": 1,
-        "caught": 1,
+        "planted": 3,
+        "caught": 3,
         "recall": 1.0,
         "masked": 2,
         "precision": 1.0
@@ -3316,29 +3346,29 @@
         "precision": 1.0
       },
       "password": {
-        "planted": 5,
+        "planted": 7,
         "caught": 5,
-        "recall": 1.0,
+        "recall": 0.7143,
         "masked": 2,
         "precision": 1.0
       },
       "person": {
-        "planted": 7,
-        "caught": 2,
-        "recall": 0.2857,
+        "planted": 15,
+        "caught": 4,
+        "recall": 0.2667,
         "masked": 2,
         "precision": 1.0
       },
       "resource_name": {
-        "planted": 6,
-        "caught": 6,
-        "recall": 1.0,
+        "planted": 12,
+        "caught": 8,
+        "recall": 0.6667,
         "masked": 2,
         "precision": 1.0
       }
     },
     "caught_by_layer": {
-      "rules": 51
+      "rules": 57
     },
     "misses": [
       {
@@ -3346,6 +3376,78 @@
         "type": "hostname",
         "start": 188,
         "end": 203
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "resource_name",
+        "start": 3539,
+        "end": 3575
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "resource_name",
+        "start": 3703,
+        "end": 3709
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "resource_name",
+        "start": 4185,
+        "end": 4191
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "resource_name",
+        "start": 5812,
+        "end": 5848
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "person",
+        "start": 13095,
+        "end": 13100
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "password",
+        "start": 13653,
+        "end": 13657
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "person",
+        "start": 15044,
+        "end": 15047
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "password",
+        "start": 15600,
+        "end": 15604
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "person",
+        "start": 16996,
+        "end": 17001
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "person",
+        "start": 17708,
+        "end": 17713
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "person",
+        "start": 17836,
+        "end": 17839
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "person",
+        "start": 18543,
+        "end": 18546
       },
       {
         "document": "slack-incident",
@@ -3393,15 +3495,15 @@
     "false_positives": []
   },
   "dev (no propagation, --redact)": {
-    "documents": 8,
-    "leaked_documents": 2,
+    "documents": 9,
+    "leaked_documents": 3,
     "blocked_documents": 0,
-    "redacted_documents": 1,
-    "output_leaked_documents": 2,
+    "redacted_documents": 2,
+    "output_leaked_documents": 3,
     "merged_spans": 0,
-    "recall": 0.8644,
-    "precision": 0.9783,
-    "f2": 0.885,
+    "recall": 0.7403,
+    "precision": 0.9808,
+    "f2": 0.7784,
     "per_type": {
       "api_token": {
         "planted": 3,
@@ -3446,10 +3548,10 @@
         "precision": 1.0
       },
       "generic_secret": {
-        "planted": 1,
-        "caught": 1,
+        "planted": 3,
+        "caught": 3,
         "recall": 1.0,
-        "masked": 3,
+        "masked": 5,
         "precision": 1.0
       },
       "hostname": {
@@ -3481,29 +3583,29 @@
         "precision": 1.0
       },
       "password": {
-        "planted": 5,
+        "planted": 7,
         "caught": 5,
-        "recall": 1.0,
+        "recall": 0.7143,
         "masked": 3,
         "precision": 1.0
       },
       "person": {
-        "planted": 7,
-        "caught": 2,
-        "recall": 0.2857,
-        "masked": 3,
-        "precision": 0.6667
+        "planted": 15,
+        "caught": 4,
+        "recall": 0.2667,
+        "masked": 5,
+        "precision": 0.8
       },
       "resource_name": {
-        "planted": 6,
-        "caught": 6,
-        "recall": 1.0,
-        "masked": 2,
+        "planted": 12,
+        "caught": 8,
+        "recall": 0.6667,
+        "masked": 4,
         "precision": 1.0
       }
     },
     "caught_by_layer": {
-      "rules": 51
+      "rules": 57
     },
     "misses": [
       {
@@ -3511,6 +3613,78 @@
         "type": "hostname",
         "start": 188,
         "end": 203
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "resource_name",
+        "start": 3539,
+        "end": 3575
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "resource_name",
+        "start": 3703,
+        "end": 3709
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "resource_name",
+        "start": 4185,
+        "end": 4191
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "resource_name",
+        "start": 5812,
+        "end": 5848
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "person",
+        "start": 13095,
+        "end": 13100
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "password",
+        "start": 13653,
+        "end": 13657
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "person",
+        "start": 15044,
+        "end": 15047
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "password",
+        "start": 15600,
+        "end": 15604
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "person",
+        "start": 16996,
+        "end": 17001
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "person",
+        "start": 17708,
+        "end": 17713
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "person",
+        "start": 17836,
+        "end": 17839
+      },
+      {
+        "document": "keycloak-tfstate",
+        "type": "person",
+        "start": 18543,
+        "end": 18546
       },
       {
         "document": "slack-incident",

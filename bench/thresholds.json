@@ -21,7 +21,7 @@
     "resource_name": 0.8
   },
   "dev": {
-    "_overall": 0.8644,
+    "_overall": 0.8312,
     "api_token": 1.0,
     "aws_account_id": 1.0,
     "aws_resource_id": 1.0,
@@ -32,8 +32,8 @@
     "ip_address": 1.0,
     "ip_network": 1.0,
     "organization": 0.6667,
-    "password": 1.0,
-    "person": 0.2857,
+    "password": 0.7143,
+    "person": 0.4667,
     "resource_name": 1.0
   }
 }
