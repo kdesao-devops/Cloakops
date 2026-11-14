@@ -63,6 +63,15 @@ uv run cloakops --help                   # CLI (run from the repo root)
 - Each detection layer must prove its contribution (with / without, per model size).
 - Report what still leaks, honestly, in `docs/benchmark.md`.
 
+## End of each phase
+
+- Run an **independent review** of the phase's changes by a separate agent (`/security-review`,
+  then `/code-review`): the author of the code has blind spots, and the project owner reviews
+  specs (ADRs, comments, tests names), not code.
+- Triage the findings (real issue / false positive, with the reason), fix real issues in `fix:`
+  commits, and record the outcome in `docs/reviews/YYYY-MM-DD-phase-N.md`.
+- Check that every ADR and docstring still matches the code before closing the phase.
+
 ## Environment
 
 - macOS arm64. Local LLMs (Ollama / llama.cpp) run natively for Metal, never in Docker.

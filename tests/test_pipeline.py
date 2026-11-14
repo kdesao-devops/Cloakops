@@ -196,3 +196,26 @@ def test_detector_failure_fails_closed() -> None:
 
     with pytest.raises(DetectionError):
         Pipeline([Broken()]).mask("anything")
+
+
+def test_failed_mask_leaves_no_trace_in_the_session() -> None:
+    # Regression (code review): a refused document still taught terms and created mappings.
+    p = Pipeline([RULES], Session(KeyedDerivation(KEY)), propagate=True)
+    p.mask("client: Jacquil\n")
+    before_session, before_terms = len(p.session), p.propagator.export_state()
+
+    def leaky(value: str, ctx: Context, counter: int) -> str:
+        return f"{value} copy"
+
+    p._pseudonymizer._generators[E.PERSON] = leaky
+    with pytest.raises(LeakDetectedError):
+        p.mask("owner: Orion Vasquez\npassword: S3cr3tV4lue\n")
+    assert len(p.session) == before_session
+    assert p.propagator.export_state() == before_terms
+
+
+def test_seed_terms_are_not_exported_to_the_session() -> None:
+    propagator = Propagator([("Brindel Logistics", E.ORGANIZATION)])
+    state = propagator.export_state()
+    assert state["values"] == {} and state["words"] == {}
+    assert propagator.expand("Brindel called")  # still active in this process

@@ -134,3 +134,9 @@ def test_uuid_masked_in_context_only() -> None:
 )
 def test_person_and_customer_keys_by_suffix(text: str, expected: list[str]) -> None:
     assert values(text, KV) == expected
+
+
+def test_cli_value_starting_with_a_dash_after_equals() -> None:
+    # Regression (code review): "--password=-x..." was skipped as if "-x" were another flag.
+    assert values("mysql --password=-x9Kq!2pLm -h db\n", KV) == ["-x9Kq!2pLm"]
+    assert values("tool --password -h db\n", KV) == []  # after a space, "-h" is the next flag

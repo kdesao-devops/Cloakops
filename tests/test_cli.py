@@ -180,3 +180,64 @@ def test_config_file_org_domains(
     )
     assert "korvane" not in out
     assert os.environ["CLOAKOPS_HOME"] == str(home)
+
+
+def test_unmask_of_an_expired_session_is_an_error(
+    home: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Regression (code review): it printed the pseudonyms unchanged with exit code 0.
+    _, masked, _ = run(["mask", "--session", "old"], capsys, LOG, monkeypatch)
+    path = home / "sessions" / "old.json"
+    state = json.loads(path.read_text())
+    state["created_at"] = (datetime.now(UTC) - timedelta(days=2)).isoformat()
+    path.write_text(json.dumps(state))
+    path.chmod(0o600)
+    code, out, err = run(["unmask", "--session", "old"], capsys, masked, monkeypatch)
+    assert code == EXIT_USAGE and out == "" and "expired" in err
+
+
+def test_stale_temporary_file_cannot_make_a_session_readable(home: Path) -> None:
+    # Regression (code review): a leftover world-readable .tmp file was reused for the write.
+    store = Store(home)
+    loaded = store.load("s")
+    stale = home / "sessions" / "s.tmp"
+    stale.write_text("{}")
+    stale.chmod(0o644)
+    store.save(loaded)
+    assert ((home / "sessions" / "s.json").stat().st_mode & 0o777) == 0o600
+
+
+def test_concurrent_masks_on_one_session_keep_every_mapping(home: Path) -> None:
+    # Regression (code review): the last writer won and dropped the other's mappings.
+    import threading
+
+    from cloakops.cli import main as cli_main
+
+    texts = [f"server 10.0.{i}.17 up\n" for i in range(6)]
+    barrier = threading.Barrier(len(texts))
+    codes: list[int] = []
+
+    def mask(text: str, index: int) -> None:
+        source = home.parent / f"in{index}.txt"
+        source.write_text(text)
+        barrier.wait()
+        codes.append(cli_main(["-q", "mask", str(source), "--session", "shared"]))
+
+    threads = [threading.Thread(target=mask, args=(t, i)) for i, t in enumerate(texts)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+    assert codes == [0] * len(texts)
+    originals = {e.original for e in Store(home).load("shared").session.entries()}
+    assert {f"10.0.{i}.17" for i in range(len(texts))} <= originals
+
+
+def test_explicitly_empty_internal_suffixes_are_respected(
+    home: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Regression (code review): `x or default` brought the default suffixes back.
+    home.mkdir(mode=0o700)
+    (home / "config.toml").write_text("internal_suffixes = []\n")
+    _, out, _ = run(["scan"], capsys, "host db01.prod.lan\n", monkeypatch)
+    assert "hostname" not in out

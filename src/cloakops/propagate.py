@@ -26,7 +26,7 @@ from pathlib import Path
 from cloakops.errors import FailClosedError
 from cloakops.model import EntityType, Span
 from cloakops.pseudo.generators import PUBLIC_MAIL_DOMAINS
-from cloakops.pseudo.text import KEEP_WORDS, has_content, is_generic
+from cloakops.pseudo.text import STOP_WORDS, has_content, is_generic
 
 PROPAGATION_DETECTOR = "propagation"
 SHARED_PREFIX_MIN_VALUES = 3  # distinct resource names sharing a first word (ADR 0015)
@@ -47,15 +47,6 @@ NAME_TYPES = frozenset(
     }
 )
 
-_COMMON_WORDS = """
-    the and for with from this that these those into onto over under about after before then
-    than when where which while what who whom your yours ours their there here have has had
-    been being were was are not but all any each every some such only also just more most less
-    none null true false yes value values error errors warn warning info debug trace fatal
-    name names type types text string number list item items example sample unknown other new
-    old test tests user root admin guest owner default enabled disabled true false none
-""".split()  # noqa: SIM905 (a word list reads better as text)
-STOP_WORDS: frozenset[str] = KEEP_WORDS | frozenset(_COMMON_WORDS)
 
 _WORD = re.compile(r"[^\W_]+")
 _PREFIX_SOURCES = frozenset(
@@ -132,22 +123,43 @@ class Propagator:
         self._values: dict[str, EntityType] = {}  # exact value -> type
         self._domains: set[str] = set()  # organization domains learned (korvane.com)
         self._prefixes: dict[str, set[str]] = {}  # first word -> distinct resource names
+        # Terms that come only from the seed dictionary: never exported to session files, so
+        # removing a name from the dictionary removes it everywhere (and it is not duplicated).
+        self._seed_values: set[str] = set()
+        self._seed_words: set[str] = set()
         self._compiled: tuple[int, re.Pattern[str] | None, re.Pattern[str] | None] | None = None
         self.add_seed(seed)
 
     def add_seed(self, seed: Iterable[tuple[str, EntityType]]) -> None:
         for term, entity_type in seed:
+            values, words = set(self._values), set(self._words)
             self._add_value(term, entity_type)
             self._add_words(term, entity_type)
+            self._seed_values |= set(self._values) - values
+            self._seed_words |= set(self._words) - words
 
     def export_state(self) -> dict[str, object]:
         """Learned terms, to resume propagation in another process (holds real values)."""
         return {
-            "words": {w: t.value for w, t in self._words.items()},
-            "values": {v: t.value for v, t in self._values.items()},
+            "words": {w: t.value for w, t in self._words.items() if w not in self._seed_words},
+            "values": {v: t.value for v, t in self._values.items() if v not in self._seed_values},
             "domains": sorted(self._domains),
             "prefixes": {p: sorted(names) for p, names in self._prefixes.items()},
         }
+
+    def snapshot(self) -> tuple[dict[str, object], frozenset[str], frozenset[str]]:
+        return self.export_state(), frozenset(self._seed_values), frozenset(self._seed_words)
+
+    def restore(self, snapshot: tuple[dict[str, object], frozenset[str], frozenset[str]]) -> None:
+        """Back to a snapshot (used when a mask fails: a refused document teaches nothing)."""
+        state, seed_values, seed_words = snapshot
+        seeded_values = {v: self._values[v] for v in seed_values if v in self._values}
+        seeded_words = {w: self._words[w] for w in seed_words if w in self._words}
+        self._words, self._values, self._domains, self._prefixes = {}, {}, set(), {}
+        self.import_state(state)
+        self._values.update(seeded_values)
+        self._words.update(seeded_words)
+        self._seed_values, self._seed_words = set(seed_values), set(seed_words)
 
     def import_state(self, state: Mapping[str, object]) -> None:
         words, values = state.get("words", {}), state.get("values", {})
@@ -203,6 +215,7 @@ class Propagator:
             if span.merged:
                 continue
             value = span.text_of(text)
+            self._seed_values.discard(value)
             self._add_value(value, span.entity_type)
             if span.entity_type in NAME_TYPES and span.confidence >= MIN_SOURCE_CONFIDENCE:
                 self._add_words(value, span.entity_type)

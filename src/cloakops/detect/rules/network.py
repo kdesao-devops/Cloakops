@@ -16,17 +16,20 @@ _IPV4 = rf"{_OCTET}(?:\.{_OCTET}){{3}}"
 # longer dotted number, and hostnames like host-10.0.0.1.
 _IPV4_BEFORE = r"(?<![\w.-])"
 
+_CIDR_SUFFIX = r"/(?:3[0-2]|[12]?[0-9])(?![\w/]|\.[0-9])"
+
 IPV4_NETWORK = RegexRule(
     name="ipv4-cidr",
     entity_type=EntityType.IP_NETWORK,
-    pattern=re.compile(rf"{_IPV4_BEFORE}{_IPV4}/(?:3[0-2]|[12]?[0-9])(?![\w/]|\.[0-9])"),
+    pattern=re.compile(rf"{_IPV4_BEFORE}{_IPV4}{_CIDR_SUFFIX}"),
 )
 
 IPV4_ADDRESS = RegexRule(
     name="ipv4",
     entity_type=EntityType.IP_ADDRESS,
-    # Not followed by "/<digit>" (that is a CIDR, matched above) or ".<digit>" (5+ parts).
-    pattern=re.compile(rf"{_IPV4_BEFORE}{_IPV4}(?![\w-]|\.[0-9]|/[0-9])"),
+    # Not followed by ".<digit>" (5+ parts), nor by a valid CIDR prefix (matched above). Any other
+    # "/..." is a path (http://10.0.0.1/1/status) or an invalid prefix (/33): still an address.
+    pattern=re.compile(rf"{_IPV4_BEFORE}{_IPV4}(?![\w-]|\.[0-9]|{_CIDR_SUFFIX})"),
 )
 
 # EC2-style node names embed the private IP: ip-10-0-1-23 (Kubernetes node names, logs).

@@ -60,6 +60,15 @@ class Session:
         if kept:
             self._kept.add(original)
 
+    def rollback(self, length: int) -> None:
+        """Forget the mappings added after the session had `length` of them (sessions only
+        grow, in insertion order). Used when a mask fails: a refused document leaves no trace."""
+        for key in list(self._forward)[length:]:
+            self._forward.pop(key)
+        self._reverse = {pseudonym: original for (_, original), pseudonym in self._forward.items()}
+        self._originals = {original for (_, original) in self._forward}
+        self._kept &= self._originals
+
     def export_state(self) -> dict[str, object]:
         """Everything needed to resume the session in another process (holds real values)."""
         return {

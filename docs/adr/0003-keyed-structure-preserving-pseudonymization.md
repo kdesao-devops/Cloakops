@@ -27,8 +27,10 @@ with, while revealing nothing about the real values.
     pseudonymized with the same generators used elsewhere, so the account inside an ARN matches
     the same account seen alone.
   - AWS account ID: 12 digits → 12 digits.
-  - Secrets: same known prefix and same length (`AKIA` + 16 chars, `ghp_` + 36, ...), but
-    guaranteed invalid.
+  - Secrets: same known prefix and same length (`AKIA` + 16 chars, `ghp_` + 36, ...), and
+    unusable: invalid by construction when the vendor format carries a checksum (GitHub tokens),
+    otherwise a random value of 100+ bits that matches a real credential only with negligible
+    probability. (Corrected 2026-11-14: the first version said "guaranteed invalid".)
   - Hostnames: same label count, internal suffix replaced by a reserved domain (`*.example`).
 - Overlapping detections: the longest composite span wins and its generator handles the parts.
 

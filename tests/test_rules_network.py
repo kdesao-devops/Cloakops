@@ -89,3 +89,12 @@ def test_organization_domains_and_subdomains() -> None:
     rule = organization_domain_rule(["acme.io"])
     text = "see https://grafana.ops.acme.io/d/x and acme.io, not acme.io.evil.com"
     assert values(text, rule) == ["acme.io", "grafana.ops.acme.io"]
+
+
+@pytest.mark.parametrize(
+    "text", ["curl http://10.20.4.11/1/status", "addr 10.20.4.11/33 bad", "10.20.4.11/abc"]
+)
+def test_ipv4_followed_by_a_slash_that_is_not_a_prefix(text: str) -> None:
+    # Regression (code review): the address rule deferred to the CIDR rule on any "/<digit>",
+    # but the CIDR rule rejects paths and invalid prefixes, so nothing was detected.
+    assert values(text, IPV4_ADDRESS, IPV4_NETWORK) == ["10.20.4.11"]

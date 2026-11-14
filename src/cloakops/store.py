@@ -14,12 +14,15 @@ Layout under $CLOAKOPS_HOME (default ~/.local/state/cloakops):
 
 from __future__ import annotations
 
+import fcntl
 import json
 import os
 import re
 import stat
+import tempfile
 import tomllib
 from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -64,6 +67,7 @@ class LoadedSession:
     session: Session
     propagator: Propagator
     created_at: datetime
+    expired: bool = False  # a stored session existed but had expired: this one is fresh
 
 
 class Store:
@@ -74,11 +78,12 @@ class Store:
     # --- directories -------------------------------------------------------------------------
 
     def _ensure_dir(self, path: Path) -> Path:
-        if path.exists():
-            _private(path, "directory")
-        else:
+        try:
             path.mkdir(mode=0o700, parents=True)
             path.chmod(0o700)  # mkdir's mode is filtered by the umask
+        except FileExistsError:
+            pass  # existing (or created concurrently by another invocation): check it instead
+        _private(path, "directory")
         return path
 
     @property
@@ -134,7 +139,7 @@ class Store:
                 raise ValueError("unsupported session version")
             if self._expired(created_at):
                 path.unlink()
-                return LoadedSession(name, Session(), Propagator(), datetime.now(UTC))
+                return LoadedSession(name, Session(), Propagator(), datetime.now(UTC), expired=True)
             session = Session.from_state(state["session"])
             propagator = Propagator()
             propagator.import_state(state["propagation"])
@@ -150,11 +155,32 @@ class Store:
             "session": loaded.session.export_state(),
             "propagation": loaded.propagator.export_state(),
         }
-        tmp = path.with_suffix(".tmp")
-        fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
-        with os.fdopen(fd, "w", encoding="utf-8") as handle:
-            json.dump(state, handle)
-        os.replace(tmp, path)  # atomic: a crash never leaves a half-written session
+        self._write_private(path, json.dumps(state))
+
+    def _write_private(self, path: Path, content: str) -> None:
+        """Atomic owner-only write: a fresh temporary file (mkstemp creates it 0600 and never
+        reuses an existing file, whatever its mode), then rename over the target."""
+        fd, tmp = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.", suffix=".tmp")
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as handle:
+                handle.write(content)
+            os.replace(tmp, path)
+        except BaseException:
+            Path(tmp).unlink(missing_ok=True)
+            raise
+
+    @contextmanager
+    def lock(self, name: str) -> Iterator[None]:
+        """Exclusive lock on a session for a whole load -> mask -> save cycle, so two concurrent
+        invocations on the same session cannot overwrite each other's mappings."""
+        lock_path = self._session_path(name).with_suffix(".lock")
+        fd = os.open(lock_path, os.O_RDWR | os.O_CREAT, 0o600)
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX)
+            yield
+        finally:
+            fcntl.flock(fd, fcntl.LOCK_UN)
+            os.close(fd)
 
     def delete(self, name: str) -> bool:
         path = self._session_path(name)
@@ -183,10 +209,7 @@ class Store:
 
     def write_seed(self, lines: list[str]) -> None:
         self._ensure_dir(self.home)
-        fd = os.open(self.seed_path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
-        with os.fdopen(fd, "w", encoding="utf-8") as handle:
-            handle.write("".join(f"{line}\n" for line in lines))
-        self.seed_path.chmod(0o600)
+        self._write_private(self.seed_path, "".join(f"{line}\n" for line in lines))
 
     def read_seed_lines(self) -> list[str]:
         if not self.seed_path.exists():

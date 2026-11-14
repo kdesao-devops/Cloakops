@@ -55,7 +55,11 @@ def _pipeline(
     config = store.config()
     domains = (*config.organization_domains, *(getattr(args, "org_domain", None) or ()))
     detector = default_rules_detector(
-        internal_suffixes=config.internal_suffixes or DEFAULT_INTERNAL_SUFFIXES,
+        internal_suffixes=(
+            config.internal_suffixes
+            if config.internal_suffixes is not None
+            else DEFAULT_INTERNAL_SUFFIXES
+        ),
         organization_domains=domains,
     )
     loaded = store.load(session_name) if session_name else None
@@ -74,12 +78,13 @@ def _pipeline(
 
 def cmd_mask(args: argparse.Namespace) -> int:
     store = _store(args)
-    pipeline, loaded = _pipeline(args, store, args.session)
     text = _read_input(args.file)
-    result = pipeline.mask(text)  # raises FailClosedError: nothing is written
-    if loaded is None:  # unreachable: the parser requires --session
-        return EXIT_USAGE
-    store.save(loaded)
+    with store.lock(args.session):  # load -> mask -> save is one critical section
+        pipeline, loaded = _pipeline(args, store, args.session)
+        result = pipeline.mask(text)  # raises FailClosedError: nothing is written
+        if loaded is None:  # unreachable: the parser requires --session
+            return EXIT_USAGE
+        store.save(loaded)
     types = Counter(
         r.span.entity_type.value for r in result.replacements if r.pseudonym != r.span.text_of(text)
     )
@@ -94,7 +99,13 @@ def cmd_unmask(args: argparse.Namespace) -> int:
     if not store.exists(args.session):
         log.error("no session named %r (expired, or never used with mask)", args.session)
         return EXIT_USAGE
-    pipeline, _ = _pipeline(args, store, args.session)
+    pipeline, loaded = _pipeline(args, store, args.session)
+    if loaded is not None and loaded.expired:
+        # Restoring nothing would print pseudonyms with exit 0, as if it had worked.
+        log.error(
+            "session %r has expired: its mappings are gone, nothing can be restored", args.session
+        )
+        return EXIT_USAGE
     result = pipeline.unmask(_read_input(args.file))
     log.info("restored %d value(s) (session %s)", len(result.restorations), args.session)
     sys.stdout.write(result.text)

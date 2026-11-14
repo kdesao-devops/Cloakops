@@ -6,6 +6,7 @@ candidate pseudonym is rejected (and the generator asked again with counter + 1)
 - already stands for another original (re-injection would be ambiguous);
 - equals another real sensitive value of the session, or a token present in the document
   (re-injection would replace text that was never a pseudonym);
+- is an ordinary word (re-injection would rewrite that word everywhere in the answer);
 - changes how YAML would type the scalar (`acme` -> `true` turns a string into a boolean).
 After `max_attempts` rejections, `PseudonymizationError`: fail closed, nothing is produced.
 """
@@ -22,7 +23,7 @@ from cloakops.model import EntityType, Span
 from cloakops.pseudo.generators import BIJECTIVE, GENERATORS, KEEP_IF, Generator, opaque
 from cloakops.pseudo.keyed import KeyedDerivation
 from cloakops.pseudo.session import Session
-from cloakops.pseudo.text import has_content
+from cloakops.pseudo.text import STOP_WORDS, has_content
 
 DEFAULT_MAX_ATTEMPTS = 32
 
@@ -123,6 +124,8 @@ class Pseudonymizer:
             return False
         if self.session.is_original(candidate) or candidate in self._doc_tokens:
             return False
+        if candidate.lower() in STOP_WORDS:
+            return False  # an ordinary word: re-injection would rewrite it everywhere
         return _scalar_kind(candidate) == _scalar_kind(original)
 
     def pseudonym_for_span(self, span: Span, text: str) -> str:

@@ -28,7 +28,13 @@ exception message can carry input values (`CLOAKOPS_DEBUG=1` shows it).
 
 - `sessions/<name>.json`: key, mappings, learned propagation terms; directory 0700, files 0600,
   written atomically (temporary file + rename); refused if group or others can access them;
-- TTL (default 24 h): an expired session is deleted when touched; `session purge`;
+- TTL (default 24 h): an expired session is deleted when touched; `session purge`; `unmask` on
+  an expired session is an error (exit 2), never a silent "restored 0 values";
+- writes go to a fresh `mkstemp` file (0600, never reusing an existing file) renamed over the
+  target; `mask` holds an exclusive `flock` on the session for load -> mask -> save, so
+  concurrent invocations cannot drop each other's mappings;
+- seed-dictionary terms are loaded at each run and never copied into session files, so removing
+  a name from the dictionary removes it everywhere;
 - session names restricted to `[A-Za-z0-9._-]{1,64}`, so a name cannot escape the directory;
 - `seed.txt` (ADR 0007) and an optional `config.toml` (`organization_domains`,
   `internal_suffixes`), read with the standard `tomllib`.

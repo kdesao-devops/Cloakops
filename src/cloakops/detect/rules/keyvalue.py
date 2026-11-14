@@ -260,7 +260,11 @@ _KEY_VALUE = re.compile(
     r"(?:(?P<kq>[\"'])(?P<qkey>[^\"'\n]{1,80})(?P=kq)|(?<![\w.-])(?P<key>[A-Za-z_][\w.-]{0,80}))"
     + _SEP
 )
-_CLI_FLAG = re.compile(r"(?<![\w-])--?(?P<key>[A-Za-z][\w-]{0,60})(?P<sep>=|[ \t]+)(?=[^\s-])")
+# After "=" the value may start with "-" (--password=-x9...); after a space a "-" starts the next
+# flag, so it is not a value.
+_CLI_FLAG = re.compile(
+    r"(?<![\w-])--?(?P<key>[A-Za-z][\w-]{0,60})(?P<sep>=(?=\S)|[ \t]+(?=[^\s-]))"
+)
 _ENV_PAIR = re.compile(
     r"(?P<nq>[\"']?)name(?P=nq)[ \t]*[:=][ \t]*(?P<vq>[\"']?)(?P<name>[A-Za-z_][\w.-]*)(?P=vq)"
     r"[ \t]*,?[ \t]*(?:\r?\n[ \t]*(?:-[ \t]*)?)?"

@@ -121,3 +121,13 @@ def test_a_given_key_gives_the_same_pseudonyms_in_every_engine() -> None:
     assert engine().session.derivation.digest("d", "v") == engine().session.derivation.digest(
         "d", "v"
     )
+
+
+def test_pseudonym_is_never_a_common_word() -> None:
+    # Regression (code review): a short name pseudonymized to "can" would make re-injection
+    # rewrite every "can" in the model's answer.
+    def common_first(value: str, ctx: Context, counter: int) -> str:
+        return "can" if counter == 0 else "qzx"
+
+    pseudonymizer = Pseudonymizer(engine().session, generators={E.ORGANIZATION: common_first})
+    assert pseudonymizer.pseudonym(E.ORGANIZATION, "ibm") == "qzx"

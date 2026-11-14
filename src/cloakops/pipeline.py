@@ -72,6 +72,17 @@ class Pipeline:
         return merged, len(merged) - len(spans)
 
     def mask(self, text: str) -> MaskResult:
+        """All or nothing: if masking fails, the session and the learned terms are restored, so a
+        refused (possibly attacker-controlled) document leaves no trace in the session."""
+        session_length, learned = len(self.session), self.propagator.snapshot()
+        try:
+            return self._mask(text)
+        except BaseException:
+            self.session.rollback(session_length)
+            self.propagator.restore(learned)
+            raise
+
+    def _mask(self, text: str) -> MaskResult:
         spans, propagated = self.detect(text)
         masked = self._pseudonymizer.pseudonymize_text(text, spans)
         findings = rescan(text, masked, self.session, self.detectors if self._redetect else None)

@@ -140,3 +140,24 @@ def is_generic(value: str) -> bool:
     leak-checked, because the same words legitimately stay in clear inside other pseudonyms."""
     runs = _RUN.findall(_ESCAPES.sub("", value))
     return all(r.lower() in KEEP_WORDS or (r.isdigit() and len(r) <= 2) for r in runs)
+
+
+# Common English words. Used to keep ordinary words out of propagation and leak checks
+# (`client: error` must not mask every "error"), and to reject pseudonyms that are ordinary words
+# (a 3-letter org pseudonymized to "can" would make re-injection rewrite every "can" in the
+# model's answer). Not exhaustive: short pseudonyms remain the weak spot (ADR 0011).
+_COMMON_WORDS = """
+    a an as at be by do go he if in is it me my no of on or so to up us we
+    the and for with from this that these those into onto over under about after before then
+    than when where which while what who whom why how your yours ours their there here have has
+    had been being were was are not but all any each every some such only also just more most
+    less none null true false yes value values error errors warn warning info debug trace fatal
+    name names type types text string number list item items example sample unknown other new
+    old test tests user root admin guest owner default enabled disabled can get got her him his
+    its let may now off one our out own put say see she two use way you day did end few run set
+    top try via yet add ask big bit box buy cut far fix fun lot low max min net non per raw red
+    sum tag win back both call came come does done down even find give good into keep know last
+    like line long look made make many much must need next open part plan read same send show
+    side take tell them they time turn very want well went will word work year
+"""
+STOP_WORDS: frozenset[str] = KEEP_WORDS | frozenset(_COMMON_WORDS.split())

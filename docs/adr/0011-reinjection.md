@@ -47,6 +47,9 @@ glued with arbitrary separators, and for the realistic tfstate and Kubernetes do
 
 ## Consequences
 
+- Pseudonyms that are common words are rejected at generation (`STOP_WORDS`): a short name
+  pseudonymized to `can` would make re-injection rewrite every "can" in the answer. The list is
+  not exhaustive; short pseudonyms remain the weak spot (found by code review, 2026-11-14).
 - A literal in the model's answer that happens to equal a pseudonym is restored. Pseudonyms are
   long and random for secrets and IDs; the risk concentrates on short names.
 - Restoring credentials puts real secrets in the local answer; that is the point when the user

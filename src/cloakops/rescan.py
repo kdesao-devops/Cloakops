@@ -76,13 +76,12 @@ def rescan(
     # 2. Detections in the output that are not pseudonyms (opt-in: it costs a second detection).
     if detectors is None:
         return findings
-    replaced = [(r.output_start, r.output_end) for r in masked.replacements]
+    replaced = bytearray(len(output))  # 1 where a pseudonym was written: built once, O(n)
+    for r in masked.replacements:
+        replaced[r.output_start : r.output_end] = b"\x01" * (r.output_end - r.output_start)
 
     def outside_replacements(start: int, end: int) -> bool:
-        for i in range(start, end):
-            if output[i].isalnum() and not any(a <= i < b for a, b in replaced):
-                return True
-        return False
+        return any(output[i].isalnum() and not replaced[i] for i in range(start, end))
 
     for span in resolve_overlaps(run_detectors(output, detectors)):
         text = span.text_of(output)
